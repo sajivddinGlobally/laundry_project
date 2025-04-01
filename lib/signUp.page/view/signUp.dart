@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/signUp.page/view/otp.page.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -16,6 +18,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: defaultColor,
       body: Column(
         children: [
           Stack(
@@ -130,12 +133,18 @@ class _SignUpState extends State<SignUp> {
               // ],
               maxLength: 10,
               keyboardType: TextInputType.phone,
+              style: GoogleFonts.kumbhSans(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
               decoration: InputDecoration(
                 counterText: '', // hide karne ke liye
                 prefixIcon: Icon(Icons.phone_in_talk_outlined),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: buttonColor,
+                    width: 1.5.w,
                   ), // Bottom border color when not focused
                 ),
                 focusedBorder: UnderlineInputBorder(
@@ -146,6 +155,34 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
           ),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => OtpPage()),
+              );
+            },
+            child: Container(
+              width: 351.w,
+              height: 55.h,
+              decoration: BoxDecoration(
+                color: buttonColor,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Center(
+                child: Text(
+                  "sign in",
+                  style: GoogleFonts.kumbhSans(
+                    fontSize: 24.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20.h),
         ],
       ),
     );
