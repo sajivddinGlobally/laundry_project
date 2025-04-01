@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
@@ -119,6 +120,31 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ],
+          ),
+          SizedBox(height: 30.h),
+          Padding(
+            padding: EdgeInsets.only(left: 50.w, right: 50.w),
+            child: TextFormField(
+              // inputFormatters: [
+              //   LengthLimitingTextInputFormatter(10), // Maximum 10 digits
+              // ],
+              maxLength: 10,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                counterText: '', // hide karne ke liye
+                prefixIcon: Icon(Icons.phone_in_talk_outlined),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: buttonColor,
+                  ), // Bottom border color when not focused
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: buttonColor,
+                  ), // Bottom border color when focused
+                ),
+              ),
+            ),
           ),
         ],
       ),
