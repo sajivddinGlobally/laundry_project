@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +12,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      double page =
+          _scrollController.offset / 313.84.w; // Adjust according to item width
+      setState(() {
+        _currentPage = page.round();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,6 +145,145 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(width: 20.w),
                   ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 23.h),
+          Padding(
+            padding: EdgeInsets.only(left: 15.w, right: 15.w),
+            child: Row(
+              children: [
+                Text(
+                  "Special For You",
+                  style: GoogleFonts.kumbhSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.sp,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  "See All",
+                  style: GoogleFonts.kumbhSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                    color: buttonColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20.h),
+          SizedBox(
+            height: 180.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              controller: _scrollController,
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: EdgeInsets.only(left: 15.w),
+                  child: Image.asset("assets/laundry.png"),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 10.h),
+          SmoothPageIndicator(
+            controller: PageController(
+              initialPage: _currentPage,
+            ), // Dummy controller
+            count: 3,
+            effect: ExpandingDotsEffect(
+              activeDotColor: buttonColor,
+              dotColor: Colors.grey,
+              dotHeight: 8.w,
+              dotWidth: 8.h,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.only(left: 15.w, right: 15.w),
+            child: Row(
+              children: [
+                Text(
+                  "Service",
+                  style: GoogleFonts.kumbhSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.sp,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  "See All",
+                  style: GoogleFonts.kumbhSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                    color: buttonColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.only(left: 15.w),
+            child: Row(
+              children: [
+                Container(
+                  width: 71.24.w,
+                  height: 71.24.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color.fromARGB(99, 196, 196, 196),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset("assets/Clothes.png"),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 71.24.w,
+                  height: 71.24.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color.fromARGB(99, 196, 196, 196),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                      child: Image.asset("assets/irn.png"),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.only(left: 15.w, right: 15.w),
+            child: Row(
+              children: [
+                Text(
+                  "Popular Service ",
+                  style: GoogleFonts.kumbhSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.sp,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  "See All",
+                  style: GoogleFonts.kumbhSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                    color: buttonColor,
+                  ),
                 ),
               ],
             ),
