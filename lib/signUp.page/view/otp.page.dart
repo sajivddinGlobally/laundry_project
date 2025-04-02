@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:laundry_app/account/account.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:otpify/otpify.dart';
 
@@ -87,9 +89,10 @@ class _OtpPageState extends State<OtpPage> {
           Center(
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  
-                });
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => AccountPage()),
+                );
               },
               child: Container(
                 width: 384.51.w,
