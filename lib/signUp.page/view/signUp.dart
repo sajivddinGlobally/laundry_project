@@ -21,6 +21,7 @@ class _SignUpState extends State<SignUp> {
       backgroundColor: defaultColor,
       body: Column(
         children: [
+          SizedBox(height: 30.h),
           Stack(
             children: [
               Image.asset("assets/cloths.png"),
@@ -48,7 +49,7 @@ class _SignUpState extends State<SignUp> {
               ),
               Positioned(
                 right: 20.w,
-                top: 30.h,
+                top: 15.h,
                 child: Text(
                   "Sign Up",
                   style: GoogleFonts.kumbhSans(

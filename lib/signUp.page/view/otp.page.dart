@@ -56,25 +56,59 @@ class _OtpPageState extends State<OtpPage> {
             ),
           ),
           SizedBox(height: 50.h),
-          Center(
-            child: Otpify(
-              fields: 4,
-              resendSecond: 10,
-              width: 50,
-              height: 50,
-              borderRadius: BorderRadius.circular(50.r),
-              fieldColor: buttonColor,
-              borderColor: Colors.white,
-              fieldTextColor: Colors.white,
-              fieldTextStyle: GoogleFonts.openSans(
-                fontSize: 25.25.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+          Padding(
+            padding: EdgeInsets.only(left: 20.w, right: 20.w),
+            child: Center(
+              child: Otpify(
+                fields: 4,
+                resendSecond: 10,
+                width: 57.39.w,
+                height: 56.96.h,
+                borderRadius: BorderRadius.circular(50.r),
+                fieldColor: buttonColor,
+                borderColor: Colors.white,
+                focusedBorderColor: buttonColor,
+                fieldTextColor: Colors.white,
+                fieldTextStyle: GoogleFonts.openSans(
+                  fontSize: 25.25.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+                resendFontSize: 17.sp,
+                resendText: 'Resent it',
+                resendAlignment: ResendAlignment.end,
+                resendFontWeight: FontWeight.normal,
+                onChanged: (value) {},
+                onCompleted: (value) {},
+                onResend: () {},
               ),
-              resendFontSize: 17.sp,
-              resendText: 'Resent it',
-              resendAlignment: ResendAlignment.end,
-              resendFontWeight: FontWeight.normal,
+            ),
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  
+                });
+              },
+              child: Container(
+                width: 384.51.w,
+                height: 64.28.h,
+                decoration: BoxDecoration(
+                  color: buttonColor,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Center(
+                  child: Text(
+                    "continue",
+                    style: GoogleFonts.kumbhSans(
+                      fontSize: 24.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],
