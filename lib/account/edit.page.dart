@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:laundry_app/account/location.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 
 class EditPage extends StatefulWidget {
@@ -137,102 +138,134 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: defaultColor,
-      body: Column(
-        children: [
-          SizedBox(height: 80.h),
-          Row(
-            children: [
-              SizedBox(width: 35.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Personal details",
-                    style: GoogleFonts.kumbhSans(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromARGB(255, 2, 79, 100),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Text(
-                    "Personal information",
-                    style: GoogleFonts.kumbhSans(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 2, 79, 100),
-                    ),
-                  ),
-                ],
-              ),
-              Spacer(),
-              Stack(
-                children: [
-                  Container(
-                    width: 58.85.w,
-                    height: 58.85.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromARGB(255, 217, 217, 217),
-                      border: Border.all(
-                        color: Color.fromARGB(255, 53, 185, 212),
-                        width: 2.w,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 80.h),
+            Row(
+              children: [
+                SizedBox(width: 35.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Personal details",
+                      style: GoogleFonts.kumbhSans(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 2, 79, 100),
                       ),
                     ),
-                    child: Center(
-                      child:
-                          image == null
-                              ? Image.asset("assets/girl.png")
-                              : ClipOval(
-                                child: Image.file(
-                                  image!,
-                                  width: 58.85.w,
-                                  height: 58.85.h,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                    SizedBox(height: 20.h),
+                    Text(
+                      "Personal information",
+                      style: GoogleFonts.kumbhSans(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 2, 79, 100),
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    right: -1.w,
-                    bottom: -1.h,
-                    child: GestureDetector(
-                      onTap: () {
-                        showOptions();
-                      },
-                      child: Container(
-                        width: 25.w,
-                        height: 25.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                  ],
+                ),
+                Spacer(),
+                Stack(
+                  children: [
+                    Container(
+                      width: 58.85.w,
+                      height: 58.85.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color.fromARGB(255, 217, 217, 217),
+                        border: Border.all(
                           color: Color.fromARGB(255, 53, 185, 212),
+                          width: 2.w,
                         ),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 18.sp,
+                      ),
+                      child: Center(
+                        child:
+                            image == null
+                                ? Image.asset("assets/girl.png")
+                                : ClipOval(
+                                  child: Image.file(
+                                    image!,
+                                    width: 58.85.w,
+                                    height: 58.85.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 1.w,
+                      bottom: 1.h,
+                      child: GestureDetector(
+                        onTap: () {
+                          showOptions();
+                        },
+                        child: Container(
+                          width: 25.w,
+                          height: 25.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(255, 53, 185, 212),
+                          ),
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: 18.sp,
+                          ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+                SizedBox(width: 41.w),
+              ],
+            ),
+            SizedBox(height: 50.h),
+            _buildTextField("First Name", _firstNameController),
+            SizedBox(height: 30.h),
+            _buildTextField("E-mail", _emailControlelr),
+            SizedBox(height: 30.h),
+            _buildTextField("Phone number", _phoneController),
+            SizedBox(height: 30.h),
+            _buildTextField("Current Address", _addressController),
+            SizedBox(height: 30.h),
+            _buildTextField("New password", newPasswordController),
+            SizedBox(height: 30.h),
+            _buildTextField("Re-type New Password", reTypeNewPassword),
+            SizedBox(height: 50.h),
+            Padding(
+              padding: EdgeInsets.only(left: 23.w, right: 23.w),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => LocationPage()),
+                  );
+                },
+                child: Container(
+                  width: 384.w,
+                  height: 49.h,
+                  decoration: BoxDecoration(
+                    color: buttonColor,
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
-                ],
+                  child: Center(
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.kumbhSans(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(width: 41.w),
-            ],
-          ),
-          SizedBox(height: 30.h),
-          _buildTextField("First Name", _firstNameController),
-          SizedBox(height: 30.h),
-          _buildTextField("E-mail", _emailControlelr),
-          SizedBox(height: 30.h),
-          _buildTextField("Phone number", _phoneController),
-          SizedBox(height: 30.h),
-          _buildTextField("Current Address", _addressController),
-          SizedBox(height: 30.h),
-          _buildTextField("New password", newPasswordController),
-          SizedBox(height: 30.h),
-          _buildTextField("Re-type New Password", reTypeNewPassword),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
