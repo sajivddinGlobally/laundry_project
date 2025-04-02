@@ -17,7 +17,7 @@ class _LandingPageState extends State<LandingPage> {
     {'imageUrl': "assets/landingimage1.png"},
     {'imageUrl': "assets/landingimage2.png"},
     {'imageUrl': "assets/landingimage3.png"},
-    {'imageUrl': "assets/landingimage4.png"},
+    {'imageUrl': "assets/landingimage3.png"},
     {'imageUrl': "assets/landingimage5.png"},
     {'imageUrl': "assets/landingimage6.png"},
   ];
@@ -28,19 +28,17 @@ class _LandingPageState extends State<LandingPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 10.h),
-            color: Colors.yellow,
-            height: 400.h,
+          SizedBox(
+            height: 380.h,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                crossAxisSpacing: 5.w,
-                mainAxisSpacing: 5.h,
+                crossAxisSpacing: 1.w,
+                mainAxisSpacing: 10.h,
               ),
               itemCount: mylist.length,
               itemBuilder: (context, index) {
-                return Container(
+                return SizedBox(
                   child: Image.asset(
                     mylist[index]["imageUrl"].toString(),
                     width: 181.w,
@@ -50,7 +48,6 @@ class _LandingPageState extends State<LandingPage> {
               },
             ),
           ),
-          SizedBox(height: 10.h),
           Text(
             "Your Iron delivered",
             style: GoogleFonts.kumbhSans(
@@ -59,7 +56,43 @@ class _LandingPageState extends State<LandingPage> {
               color: textColor,
             ),
           ),
-          SizedBox(height: 20.h),
+          Container(
+            margin: EdgeInsets.only(top: 30.h),
+            child: Image.asset("assets/image.png"),
+          ),
+          SizedBox(height: 30.h),
+          Center(
+            child: SizedBox(
+              width: 119.78.w,
+              height: 133.08.h,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image.asset("assets/Group.png"),
+              ),
+            ),
+          ),
+          Text(
+            "Iron",
+            style: GoogleFonts.kumbhSans(
+              fontWeight: FontWeight.w300,
+              fontSize: 36.sp,
+              color: buttonColor,
+            ),
+          ),
+          // SizedBox(height: 20.h),
+          // Padding(
+          //   padding: EdgeInsets.only(left: 30.w, right: 20.w),
+          //   child: Row(
+          //     children: [
+          //       Image.asset("assets/image.png", color: Colors.black),
+          //       Spacer(),
+          //       Image.asset("assets/image.png", color: Colors.black),
+          //       Spacer(),
+          //       Image.asset("assets/image.png", color: Colors.black),
+          //     ],
+          //   ),
+          // ),
+          SizedBox(height: 30.h),
           GestureDetector(
             onTap: () {
               Navigator.push(
