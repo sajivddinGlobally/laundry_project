@@ -218,11 +218,11 @@ class _ServicePageState extends State<ServicePage> {
                     padding: EdgeInsets.only(left: 10.w, right: 10.w),
                     child: Column(
                       children: [
-                        YourClothses(),
-                        YourClothses(),
-                        YourClothses(),
-                        YourClothses(),
-                        YourClothses(),
+                        YourClothses(name: "Casual", ammount: "40 ₹ "),
+                        YourClothses(name: "Formal", ammount: "50 ₹ "),
+                        YourClothses(name: "Blanket", ammount: "30 ₹ "),
+                        YourClothses(name: " Jeans ", ammount: "20 ₹ "),
+                        YourClothses(name: "Overcoat", ammount: "25 ₹ "),
                       ],
                     ),
                   ),
@@ -266,7 +266,10 @@ class _ServicePageState extends State<ServicePage> {
 }
 
 class YourClothses extends StatefulWidget {
-  const YourClothses({super.key});
+  final String name;
+  final String ammount;
+
+  const YourClothses({super.key, required this.name, required this.ammount});
 
   @override
   State<YourClothses> createState() => _YourClothsesState();
@@ -279,19 +282,21 @@ class _YourClothsesState extends State<YourClothses> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Casual Shirt",
+          widget.name,
           style: GoogleFonts.kumbhSans(
             fontWeight: FontWeight.w400,
             fontSize: 20.sp,
             color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
-        Text(
-          "40 ₹ ",
-          style: GoogleFonts.kumbhSans(
-            fontWeight: FontWeight.w400,
-            fontSize: 20.sp,
-            color: Color.fromARGB(255, 0, 0, 0),
+        Center(
+          child: Text(
+            widget.ammount,
+            style: GoogleFonts.kumbhSans(
+              fontWeight: FontWeight.w400,
+              fontSize: 20.sp,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
         ),
         CountStepper(

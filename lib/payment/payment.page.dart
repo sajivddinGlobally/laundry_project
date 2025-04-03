@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/payment/paymentDetails.page..dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -13,9 +14,11 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   String? selectedOption;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: defaultColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -164,7 +167,7 @@ class _PaymentPageState extends State<PaymentPage> {
             onTap: () {
               Navigator.push(
                 context,
-                CupertinoPageRoute(builder: (context) => PaymentPage()),
+                CupertinoPageRoute(builder: (context) => PaymentdetailsPage()),
               );
             },
             child: Center(
