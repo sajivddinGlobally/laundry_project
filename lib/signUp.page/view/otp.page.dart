@@ -64,8 +64,8 @@ class _OtpPageState extends State<OtpPage> {
               child: Otpify(
                 fields: 4,
                 resendSecond: 10,
-                width: 57.39.w,
-                height: 56.96.h,
+                width: 60.w,
+                height: 60.h,
                 borderRadius: BorderRadius.circular(50.r),
                 fieldColor: buttonColor,
                 borderColor: Colors.white,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:laundry_app/account/location.page.dart';
+import 'package:laundry_app/account/map.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 
 class EditPage extends StatefulWidget {
@@ -91,7 +91,7 @@ class _EditPageState extends State<EditPage> {
     return Padding(
       padding: EdgeInsets.only(left: 35.w, right: 35.w),
       child: SizedBox(
-        height: 45.h,
+        height: 50.h,
         child: TextField(
           controller: controller,
           readOnly: isReadOnly,
@@ -241,7 +241,7 @@ class _EditPageState extends State<EditPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => LocationPage()),
+                    CupertinoPageRoute(builder: (context) => MapPage()),
                   );
                 },
                 child: Container(

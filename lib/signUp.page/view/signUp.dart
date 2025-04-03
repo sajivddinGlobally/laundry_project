@@ -140,6 +140,12 @@ class _SignUpState extends State<SignUp> {
                 color: Color.fromARGB(255, 0, 0, 0),
               ),
               decoration: InputDecoration(
+                hintText: "Enter Phone Number",
+                hintStyle: GoogleFonts.kumbhSans(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 20.sp,
+                  color: Color.fromARGB(100, 0, 0, 0),
+                ),
                 counterText: '', // hide karne ke liye
                 prefixIcon: Icon(Icons.phone_in_talk_outlined),
                 enabledBorder: UnderlineInputBorder(

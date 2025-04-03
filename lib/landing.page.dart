@@ -18,7 +18,7 @@ class _LandingPageState extends State<LandingPage> {
     {'imageUrl': "assets/landingimage2.png"},
     {'imageUrl': "assets/landingimage3.png"},
     {'imageUrl': "assets/landingimage3.png"},
-    {'imageUrl': "assets/landingimage5.png"},
+    {'imageUrl': "assets/landingimage4.png"},
     {'imageUrl': "assets/landingimage6.png"},
   ];
   @override
@@ -29,12 +29,12 @@ class _LandingPageState extends State<LandingPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 380.h,
+            height: 350.h,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 1.w,
-                mainAxisSpacing: 10.h,
+                mainAxisSpacing: 5.h,
               ),
               itemCount: mylist.length,
               itemBuilder: (context, index) {
@@ -57,10 +57,10 @@ class _LandingPageState extends State<LandingPage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 30.h),
+            margin: EdgeInsets.only(top: 20.h),
             child: Image.asset("assets/image.png"),
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 25.h),
           Center(
             child: SizedBox(
               width: 119.78.w,
@@ -92,7 +92,7 @@ class _LandingPageState extends State<LandingPage> {
           //     ],
           //   ),
           // ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 50.h),
           GestureDetector(
             onTap: () {
               Navigator.push(

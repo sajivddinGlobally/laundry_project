@@ -5,14 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:laundry_app/home/home.page.dart';
 
-class LocationPage extends StatefulWidget {
-  const LocationPage({super.key});
+class MapPage extends StatefulWidget {
+  const MapPage({super.key});
 
   @override
-  State<LocationPage> createState() => _LocationPageState();
+  State<MapPage> createState() => _MapPageState();
 }
 
-class _LocationPageState extends State<LocationPage> {
+class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
