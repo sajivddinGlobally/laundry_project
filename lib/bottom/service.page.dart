@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/payment/payment.page.dart';
 
 class ServicePage extends StatefulWidget {
   const ServicePage({super.key});
@@ -164,7 +165,7 @@ class _ServicePageState extends State<ServicePage> {
             SizedBox(height: 25.h),
             Container(
               width: 422.w,
-              height: 308.h,
+              // height: 308.h,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -218,14 +219,10 @@ class _ServicePageState extends State<ServicePage> {
                     child: Column(
                       children: [
                         YourClothses(),
-                        SizedBox(height: 16.h),
                         YourClothses(),
-                        SizedBox(height: 16.h),
                         YourClothses(),
-                        // SizedBox(height: 16.h),
-                        // YourClothses(),
-                        // SizedBox(height: 16.h),
-                        // YourClothses(),
+                        YourClothses(),
+                        YourClothses(),
                       ],
                     ),
                   ),
@@ -233,21 +230,29 @@ class _ServicePageState extends State<ServicePage> {
               ),
             ),
             SizedBox(height: 23.h),
-            Center(
-              child: Container(
-                width: 334.w,
-                height: 68.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.r),
-                  color: buttonColor,
-                ),
-                child: Center(
-                  child: Text(
-                    "Make Payment",
-                    style: GoogleFonts.kumbhSans(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20.sp,
-                      color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => PaymentPage()),
+                );
+              },
+              child: Center(
+                child: Container(
+                  width: 334.w,
+                  height: 68.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.r),
+                    color: buttonColor,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Make Payment",
+                      style: GoogleFonts.kumbhSans(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20.sp,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -271,6 +276,7 @@ class _YourClothsesState extends State<YourClothses> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           "Casual Shirt",
@@ -280,7 +286,6 @@ class _YourClothsesState extends State<YourClothses> {
             color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
-        Spacer(),
         Text(
           "40 ₹ ",
           style: GoogleFonts.kumbhSans(
@@ -289,15 +294,13 @@ class _YourClothsesState extends State<YourClothses> {
             color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
-        Spacer(),
         CountStepper(
           space: 0,
           iconColor: Color.fromARGB(226, 250, 231, 59),
           defaultValue: 2,
-          max: 10,
+          max: 100,
           min: 0,
           iconDecrementColor: Color.fromARGB(255, 49, 205, 252),
-          iconDecrement: Icon(Icons.minimize, color: Colors.black),
           splashRadius: 25,
           onPressed: (value) {},
         ),
