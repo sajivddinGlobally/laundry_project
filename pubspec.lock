@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  count_stepper:
+    dependency: "direct main"
+    description:
+      name: count_stepper
+      sha256: "7435691d127aa522d655545b3410239b59c1f5a8cc7fc66aef2d71238039f980"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   cross_file:
     dependency: transitive
     description:

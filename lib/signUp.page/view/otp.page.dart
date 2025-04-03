@@ -65,7 +65,7 @@ class _OtpPageState extends State<OtpPage> {
                 fields: 4,
                 resendSecond: 10,
                 width: 60.w,
-                height: 60.h,
+                height: 65.h,
                 borderRadius: BorderRadius.circular(50.r),
                 fieldColor: buttonColor,
                 borderColor: Colors.white,

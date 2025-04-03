@@ -40,6 +40,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   image_picker: ^1.1.2
   smooth_page_indicator: ^1.2.1
+  count_stepper: ^0.0.5
 
 dev_dependencies:
   flutter_test:
