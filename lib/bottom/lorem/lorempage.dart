@@ -140,7 +140,7 @@ class _OrderIdState extends State<OrderId> {
         height: 199.39.h,
         decoration: BoxDecoration(color: Colors.white),
         child: Padding(
-          padding: EdgeInsets.only(left: 24.w, right: 24.w),
+          padding: EdgeInsets.only(left: 24.w, right: 20.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +195,7 @@ class _OrderIdState extends State<OrderId> {
                   Spacer(),
                   Icon(
                     Icons.arrow_forward_ios,
-                    size: 45.sp,
+                    size: 40.sp,
                     color: Color.fromARGB(255, 55, 162, 210),
                   ),
                 ],
