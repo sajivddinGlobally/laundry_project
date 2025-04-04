@@ -104,105 +104,101 @@ class _LorempageState extends State<LoremPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(height: 70.h),
-                  Container(
-                    width: 362.59.w,
-                    height: 199.39.h,
-                    decoration: BoxDecoration(color: Colors.white),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 24.w, right: 24.w),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset("assets/box.png"),
-                              Padding(
-                                padding: EdgeInsets.only(left: 15.w),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Order #1234567",
-                                      style: GoogleFonts.kumbhSans(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15.47.sp,
-                                        color: Color.fromARGB(
-                                          255,
-                                          55,
-                                          162,
-                                          210,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 6.h),
-                                    Text(
-                                      "From Lorem Ipsum",
-                                      style: GoogleFonts.kumbhSans(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15.47.sp,
-                                        color: Color.fromARGB(
-                                          255,
-                                          55,
-                                          162,
-                                          210,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 6.h),
-                                    Text(
-                                      "To All",
-                                      style: GoogleFonts.kumbhSans(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15.47.sp,
-                                        color: Color.fromARGB(
-                                          255,
-                                          55,
-                                          162,
-                                          210,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 6.h),
-                                    Text(
-                                      "10/10/2025-13/10/2025",
-                                      style: GoogleFonts.kumbhSans(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15.47.sp,
-                                        color: Color.fromARGB(
-                                          255,
-                                          55,
-                                          162,
-                                          210,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 45.sp,
-                                color: Color.fromARGB(255, 55, 162, 210),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15.h),
-                          Center(
-                            child: HorizontalOrderTracker(
-                              currentStep: 3, // Change this to update progress
-                              totalSteps: 5,
-                              activeColor: Colors.black,
-                              inActiveColor: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  OrderId(),
+                  SizedBox(height: 30.h),
+                  OrderId(),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OrderId extends StatefulWidget {
+  const OrderId({super.key});
+
+  @override
+  State<OrderId> createState() => _OrderIdState();
+}
+
+class _OrderIdState extends State<OrderId> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 362.59.w,
+      height: 199.39.h,
+      decoration: BoxDecoration(color: Colors.white),
+      child: Padding(
+        padding: EdgeInsets.only(left: 24.w, right: 24.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Image.asset("assets/box.png"),
+                Padding(
+                  padding: EdgeInsets.only(left: 15.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Order #1234567",
+                        style: GoogleFonts.kumbhSans(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15.47.sp,
+                          color: Color.fromARGB(255, 55, 162, 210),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        "From Lorem Ipsum",
+                        style: GoogleFonts.kumbhSans(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 15.47.sp,
+                          color: Color.fromARGB(255, 55, 162, 210),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        "To All",
+                        style: GoogleFonts.kumbhSans(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 15.47.sp,
+                          color: Color.fromARGB(255, 55, 162, 210),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        "10/10/2025-13/10/2025",
+                        style: GoogleFonts.kumbhSans(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 15.47.sp,
+                          color: Color.fromARGB(255, 55, 162, 210),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 45.sp,
+                  color: Color.fromARGB(255, 55, 162, 210),
+                ),
+              ],
+            ),
+            SizedBox(height: 15.h),
+            Center(
+              child: HorizontalOrderTracker(
+                currentStep: 3, // Change this to update progress
+                totalSteps: 5,
+                activeColor: Colors.black,
+                inActiveColor: Colors.grey,
               ),
             ),
           ],
