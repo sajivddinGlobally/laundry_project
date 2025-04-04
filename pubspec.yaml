@@ -41,6 +41,8 @@ dependencies:
   image_picker: ^1.1.2
   smooth_page_indicator: ^1.2.1
   count_stepper: ^0.0.5
+  order_tracker: ^0.0.2
+  
 
 dev_dependencies:
   flutter_test:
