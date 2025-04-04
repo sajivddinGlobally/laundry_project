@@ -185,6 +185,8 @@ class _StaffPageState extends State<StaffPage> {
           ),
           SizedBox(height: 20.h),
           DeliveryComplete(),
+          SizedBox(height: 20.h),
+          DeliveryComplete(),
         ],
       ),
     );
@@ -221,7 +223,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 15.h),
+              padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -238,18 +240,18 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                       Spacer(),
                       Container(
                         width: 83.w,
-                        height: 20.h,
+                        // height: 20.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16.r),
-                          color: Color.fromARGB(51, 83, 192, 113),
+                          color: Color.fromARGB(255, 55, 162, 210),
                         ),
                         child: Center(
                           child: Text(
-                            "Ongoing",
+                            "Complete",
                             style: GoogleFonts.openSans(
                               fontWeight: FontWeight.w400,
                               fontSize: 14.sp,
-                              color: Color.fromARGB(255, 3, 150, 44),
+                              color: Colors.white,
                             ),
                           ),
                         ),
