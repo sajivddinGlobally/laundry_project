@@ -125,8 +125,79 @@ class _MapViewPageState extends State<MapViewPage> {
                 ),
               ),
             ),
+            SizedBox(height: 46.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lorem(
+                  color: Color.fromARGB(255, 55, 162, 210),
+                  imageColor: Colors.white,
+                  loremColor: Colors.white,
+                  rupeColor: Colors.white,
+                ),
+                SizedBox(width: 80.w),
+                Lorem(
+                  color: Colors.white,
+                  imageColor: Color.fromARGB(255, 55, 162, 210),
+                  loremColor: Color.fromARGB(255, 55, 162, 210),
+                  rupeColor: Color.fromARGB(255, 55, 162, 210),
+                ),
+              ],
+            ),
+            SizedBox(height: 50.h),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Lorem extends StatefulWidget {
+  final Color color;
+  final Color imageColor;
+  final Color loremColor;
+  final Color rupeColor;
+  const Lorem({
+    super.key,
+    required this.color,
+    required this.imageColor,
+    required this.loremColor,
+    required this.rupeColor,
+  });
+
+  @override
+  State<Lorem> createState() => _LoremState();
+}
+
+class _LoremState extends State<Lorem> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 124.72.w,
+      height: 166.26..h,
+      decoration: BoxDecoration(color: widget.color),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/box.png", color: widget.imageColor),
+          SizedBox(height: 10.h),
+          Text(
+            "Lorem",
+            style: GoogleFonts.kumbhSans(
+              fontWeight: FontWeight.w900,
+              fontSize: 16.76.sp,
+              color: widget.loremColor,
+            ),
+          ),
+          Text(
+            "₹14.20",
+            style: GoogleFonts.kumbhSans(
+              fontWeight: FontWeight.w900,
+              fontSize: 27.sp,
+              color: widget.rupeColor,
+            ),
+          ),
+        ],
       ),
     );
   }
