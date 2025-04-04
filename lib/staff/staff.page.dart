@@ -82,7 +82,7 @@ class _StaffPageState extends State<StaffPage> {
                         Spacer(),
                         Container(
                           width: 83.w,
-                          height: 20.h,
+                          // height: 20.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16.r),
                             color: Color.fromARGB(51, 83, 192, 113),
@@ -210,7 +210,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
           padding: EdgeInsets.only(left: 25.w, right: 25.w),
           child: Container(
             width: 382.w,
-            height: 155.h,
+            height: 160.h,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
