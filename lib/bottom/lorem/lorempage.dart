@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:laundry_app/bottom/lorem/mapview.page.dart';
 import 'package:order_tracker/order_tracker.dart';
 
 class LoremPage extends StatefulWidget {
@@ -127,81 +128,89 @@ class OrderId extends StatefulWidget {
 class _OrderIdState extends State<OrderId> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 362.59.w,
-      height: 199.39.h,
-      decoration: BoxDecoration(color: Colors.white),
-      child: Padding(
-        padding: EdgeInsets.only(left: 24.w, right: 24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Image.asset("assets/box.png"),
-                Padding(
-                  padding: EdgeInsets.only(left: 15.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Order #1234567",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.47.sp,
-                          color: Color.fromARGB(255, 55, 162, 210),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(builder: (context) => MapViewPage()),
+        );
+      },
+      child: Container(
+        width: 362.59.w,
+        height: 199.39.h,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Padding(
+          padding: EdgeInsets.only(left: 24.w, right: 24.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Image.asset("assets/box.png"),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Order #1234567",
+                          style: GoogleFonts.kumbhSans(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15.47.sp,
+                            color: Color.fromARGB(255, 55, 162, 210),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        "From Lorem Ipsum",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 15.47.sp,
-                          color: Color.fromARGB(255, 55, 162, 210),
+                        SizedBox(height: 6.h),
+                        Text(
+                          "From Lorem Ipsum",
+                          style: GoogleFonts.kumbhSans(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 15.47.sp,
+                            color: Color.fromARGB(255, 55, 162, 210),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        "To All",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 15.47.sp,
-                          color: Color.fromARGB(255, 55, 162, 210),
+                        SizedBox(height: 6.h),
+                        Text(
+                          "To All",
+                          style: GoogleFonts.kumbhSans(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 15.47.sp,
+                            color: Color.fromARGB(255, 55, 162, 210),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        "10/10/2025-13/10/2025",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 15.47.sp,
-                          color: Color.fromARGB(255, 55, 162, 210),
+                        SizedBox(height: 6.h),
+                        Text(
+                          "10/10/2025-13/10/2025",
+                          style: GoogleFonts.kumbhSans(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 15.47.sp,
+                            color: Color.fromARGB(255, 55, 162, 210),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 45.sp,
-                  color: Color.fromARGB(255, 55, 162, 210),
-                ),
-              ],
-            ),
-            SizedBox(height: 15.h),
-            Center(
-              child: HorizontalOrderTracker(
-                currentStep: 3, // Change this to update progress
-                totalSteps: 5,
-                activeColor: Colors.black,
-                inActiveColor: Colors.grey,
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 45.sp,
+                    color: Color.fromARGB(255, 55, 162, 210),
+                  ),
+                ],
               ),
-            ),
-          ],
+              SizedBox(height: 15.h),
+              Center(
+                child: HorizontalOrderTracker(
+                  currentStep: 3, // Change this to update progress
+                  totalSteps: 5,
+                  activeColor: Colors.black,
+                  inActiveColor: Colors.grey,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

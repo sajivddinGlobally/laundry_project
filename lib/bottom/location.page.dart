@@ -370,7 +370,8 @@ class DottedLinePainter extends CustomPainter {
               Colors
                   .black // लाइन का रंग
           ..strokeWidth =
-              2 // मोटाई
+              1
+                  .w // मोटाई
           ..strokeCap = StrokeCap.round; // गोल डॉट्स के लिए
 
     double dashHeight = 5, dashSpace = 5, startY = 0;
