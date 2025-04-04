@@ -47,7 +47,7 @@ class _StaffPageState extends State<StaffPage> {
               ),
             ],
           ),
-          SizedBox(height: 11.h),
+          SizedBox(height: 15.h),
           Padding(
             padding: EdgeInsets.only(left: 25.w, right: 25.w),
             child: Container(
