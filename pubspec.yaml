@@ -42,6 +42,17 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   count_stepper: ^0.0.5
   order_tracker: ^0.0.2
+  dio: ^5.8.0+1
+  retrofit: ^4.4.2
+  logger: ^2.5.0
+  json_annotation: ^4.9.0
+  pretty_dio_logger: ^1.4.0
+  riverpod: ^2.6.1
+  flutter_riverpod: ^2.6.1
+  fluttertoast: ^8.2.12
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
   
 
 dev_dependencies:
@@ -54,6 +65,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  retrofit_generator: ^9.1.9
+  build_runner: ^2.4.15
+  json_serializable: ^6.9.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

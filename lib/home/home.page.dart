@@ -1,20 +1,24 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/bottom/location.page.dart';
 import 'package:laundry_app/bottom/profile.page.dart';
 import 'package:laundry_app/bottom/service.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/home/controller/homebannerController.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 0;
 
@@ -58,6 +62,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final homebannerData = ref.watch(homebannerProvider);
     return Scaffold(
       backgroundColor: defaultColor,
       body:
@@ -223,34 +228,45 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    SizedBox(
-                      height: 180.h,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        controller: _scrollController,
-                        itemCount: mylist.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.only(left: 10.w),
-                            child: Image.asset(
-                              mylist[index]["imageUrl"].toString(),
+                    homebannerData.when(
+                      data: (data) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: 210.h,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                controller: _scrollController,
+                                itemCount: data.data.length,
+                                itemBuilder: (context, index) {
+                                  return Image.network(
+                                    // mylist[index]["imageUrl"].toString(),
+                                    "https://rl4km84x-8000.inc1.devtunnels.ms" +
+                                        data.data[index].image,
+                                  );
+                                },
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    SmoothPageIndicator(
-                      controller: PageController(
-                        initialPage: _currentPage,
-                      ), // Dummy controller
-                      count: mylist.length,
-                      effect: ExpandingDotsEffect(
-                        activeDotColor: buttonColor,
-                        dotColor: Colors.grey,
-                        dotHeight: 8.w,
-                        dotWidth: 8.h,
-                      ),
+                            SizedBox(height: 10.h),
+                            SmoothPageIndicator(
+                              controller: PageController(
+                                initialPage: _currentPage,
+                              ), // Dummy controller
+                              count: data.data.length,
+                              effect: ExpandingDotsEffect(
+                                activeDotColor: buttonColor,
+                                dotColor: Colors.grey,
+                                dotHeight: 8.w,
+                                dotWidth: 8.h,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      error:
+                          (error, stackTrace) =>
+                              Center(child: Text(e.toString())),
+                      loading: () => Center(child: CircularProgressIndicator()),
                     ),
                     SizedBox(height: 20.h),
                     Padding(

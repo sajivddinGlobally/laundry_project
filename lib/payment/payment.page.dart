@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
-import 'package:laundry_app/payment/paymentDetails.page..dart';
+import 'package:laundry_app/payment/paymentDetails.page.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
