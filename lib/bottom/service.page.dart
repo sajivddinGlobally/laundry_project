@@ -1,21 +1,26 @@
 import 'package:count_stepper/count_stepper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/home/controller/home.page.controller.dart';
 import 'package:laundry_app/payment/payment.page.dart';
 
-class ServicePage extends StatefulWidget {
+class ServicePage extends ConsumerStatefulWidget {
   const ServicePage({super.key});
 
   @override
-  State<ServicePage> createState() => _ServicePageState();
+  _ServicePageState createState() => _ServicePageState();
 }
 
-class _ServicePageState extends State<ServicePage> {
+class _ServicePageState extends ConsumerState<ServicePage> {
+  int totalAmount = 0;
   @override
   Widget build(BuildContext context) {
+    final homeState = ref.watch(homeNotifierProvider);
     return Scaffold(
       backgroundColor: defaultColor,
       body: SingleChildScrollView(
@@ -47,67 +52,50 @@ class _ServicePageState extends State<ServicePage> {
                 ],
               ),
             ),
+
             SizedBox(height: 22.h),
-            Padding(
-              padding: EdgeInsets.only(left: 15.w),
-              child: Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 71.24.w,
-                        height: 71.24.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(99, 196, 196, 196),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.asset("assets/Clothes.png"),
+            SizedBox(
+              height: 100.h,
+              child: Padding(
+                padding: EdgeInsets.only(left: 15.w),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: homeState.services!.data.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Container(
+                          width: 71.24.w,
+                          height: 71.24.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color.fromARGB(99, 196, 196, 196),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.network(
+                                "https://rl4km84x-8000.inc1.devtunnels.ms/${homeState.services!.data[index].iconImage}",
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Text(
-                        "Iron",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.sp,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 10.w),
-                  Column(
-                    children: [
-                      Container(
-                        width: 71.24.w,
-                        height: 71.24.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(99, 196, 196, 196),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                            child: Image.asset("assets/irn.png"),
+                        Text(
+                          "${homeState.services!.data[index].title}",
+                          style: GoogleFonts.kumbhSans(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
-                      ),
-                      Text(
-                        "Iron Only",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.sp,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
+
             SizedBox(height: 22.h),
             Center(
               child: Row(
@@ -205,30 +193,71 @@ class _ServicePageState extends State<ServicePage> {
                           ),
                         ),
                         Spacer(),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          size: 30.sp,
-                          color: Color.fromARGB(255, 2, 79, 100),
+
+                        Text(
+                          "Subtotal",
+                          style: GoogleFonts.kumbhSans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20.sp,
+                            color: Color.fromARGB(255, 2, 79, 100),
+                          ),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: 16.h),
                   Padding(
-                    padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                    child: Column(
-                      children: [
-                        YourClothses(name: "Casual", ammount: "40 ₹ "),
-                        YourClothses(name: "Formal", ammount: "50 ₹ "),
-                        YourClothses(name: "Blanket", ammount: "30 ₹ "),
-                        YourClothses(name: " Jeans ", ammount: "20 ₹ "),
-                        YourClothses(name: "Overcoat", ammount: "25 ₹ "),
-                      ],
+                    padding: EdgeInsets.only(left: 33.w, right: 33.w),
+                    child: ListView.builder(
+                      itemCount: homeState.products!.data.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return YourClothses(
+                          name: homeState.products!.data[index].title,
+                          ammount:
+                              homeState.products!.data[index].priceJson[0].price
+                                  .toString() +
+                              " ₹ ",
+                          callBack: (value) {
+                            setState(() {
+                           
+                            });
+                          },
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
             ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: 33.w),
+                  Text(
+                    "Total: ",
+                    style: GoogleFonts.kumbhSans(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20.sp,
+                      color: Color.fromARGB(255, 2, 79, 100),
+                    ),
+                  ),
+                  Text(
+                    "₹ $totalAmount",
+                    style: GoogleFonts.kumbhSans(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20.sp,
+                      color: Color.fromARGB(255, 2, 79, 100),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             SizedBox(height: 23.h),
             GestureDetector(
               onTap: () {
@@ -268,46 +297,80 @@ class _ServicePageState extends State<ServicePage> {
 class YourClothses extends StatefulWidget {
   final String name;
   final String ammount;
+  final Function callBack;
 
-  const YourClothses({super.key, required this.name, required this.ammount});
+  const YourClothses({
+    super.key,
+    required this.name,
+    required this.ammount,
+    required this.callBack,
+  });
 
   @override
   State<YourClothses> createState() => _YourClothsesState();
 }
 
 class _YourClothsesState extends State<YourClothses> {
+  int count = 0;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          widget.name,
-          style: GoogleFonts.kumbhSans(
-            fontWeight: FontWeight.w400,
-            fontSize: 20.sp,
-            color: Color.fromARGB(255, 0, 0, 0),
-          ),
-        ),
-        Center(
-          child: Text(
-            widget.ammount,
-            style: GoogleFonts.kumbhSans(
-              fontWeight: FontWeight.w400,
-              fontSize: 20.sp,
-              color: Color.fromARGB(255, 0, 0, 0),
+        Expanded(
+          child: Center(
+            child: Text(
+              widget.name,
+              style: GoogleFonts.kumbhSans(
+                fontWeight: FontWeight.w400,
+                fontSize: 15.sp,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
             ),
           ),
         ),
+        Spacer(),
+
+        Expanded(
+          child: Center(
+            child: Text(
+              widget.ammount,
+              style: GoogleFonts.kumbhSans(
+                fontWeight: FontWeight.w400,
+                fontSize: 15.sp,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+          ),
+        ),
+
         CountStepper(
           space: 0,
           iconColor: Color.fromARGB(226, 250, 231, 59),
-          defaultValue: 2,
+          defaultValue: 0,
           max: 100,
           min: 0,
           iconDecrementColor: Color.fromARGB(255, 49, 205, 252),
           splashRadius: 25,
-          onPressed: (value) {},
+          onPressed: (value) {
+            setState(() {
+              count = value;
+            });
+            widget.callBack(double.parse(widget.ammount.split(".")[0]) * count);
+          },
+        ),
+
+        Expanded(
+          child: Center(
+            child: Text(
+              "${double.parse(widget.ammount.split(".")[0]) * count} ₹",
+              style: GoogleFonts.kumbhSans(
+                fontWeight: FontWeight.w400,
+                fontSize: 15.sp,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+          ),
         ),
       ],
     );

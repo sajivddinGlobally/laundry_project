@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:laundry_app/config/pretty.dio.dart';
 import 'package:laundry_app/home/controller/homebannerService.dart';
@@ -51,15 +53,15 @@ class HomeNotifier extends StateNotifier<HomeState> {
     try {
       state = state.copyWith(isLoading: true, error: null);
 
-      // API calls ek sath chalayenge using Future.wait
+      // API calls using Future.wait with compute
       final results = await Future.wait([
-        getHomeBanners(),
-        getAllServices(),
-        getPopularServices(),
-        getProducts(),
+        compute(fetchHomeBanners, null),
+        compute(fetchAllServices, null),
+        compute(fetchPopularServices, null),
+        compute(fetchProducts, null),
       ]);
 
-      // Sab results ko assign karo
+      // Assign results
       final banners = results[0] as HomeBannerModel;
       final services = results[1] as GetAllServiceModel;
       final popularServices = results[2] as GetAllServiceModel;
@@ -77,31 +79,28 @@ class HomeNotifier extends StateNotifier<HomeState> {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
-
-
-  Future<HomeBannerModel> getHomeBanners() async {
-    final homebannerservice = HomebannerService(await createDio());
-    return homebannerservice.getHomebanner();
-  }
-
-  Future<GetAllServiceModel> getAllServices() async {
-    final getallservice = GetallService(await createDio());
-    return getallservice.fetchAllService();
-  }
-
-  Future<GetAllServiceModel> getPopularServices() async {
-    final popularService = GetallService(await createDio());
-    return popularService.getPopulerService();
-  }
-
-  Future<ProductModel> getProducts() async {
-    final productservice = ProductService(await createDio());
-    return productservice.fetchProduct();
-
-    
-  }
 }
 
+// Functions to be used with compute
+Future<HomeBannerModel> fetchHomeBanners(dynamic _) async {
+  final homebannerservice = HomebannerService(await createDio());
+  return homebannerservice.getHomebanner();
+}
+
+Future<GetAllServiceModel> fetchAllServices(dynamic _) async {
+  final getallservice = GetallService(await createDio());
+  return getallservice.fetchAllService();
+}
+
+Future<GetAllServiceModel> fetchPopularServices(dynamic _) async {
+  final popularService = GetallService(await createDio());
+  return popularService.getPopulerService();
+}
+
+Future<ProductModel> fetchProducts(dynamic _) async {
+  final productservice = ProductService(await createDio());
+  return productservice.fetchProduct();
+}
 
 final homeNotifierProvider =
     StateNotifierProvider<HomeNotifier, HomeState>((ref) {
