@@ -9,18 +9,28 @@ import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:laundry_app/home/controller/home.page.controller.dart';
 import 'package:laundry_app/payment/payment.page.dart';
 
+// ServicePage.dart
+
 class ServicePage extends ConsumerStatefulWidget {
   const ServicePage({super.key});
 
   @override
-  _ServicePageState createState() => _ServicePageState();
+  ConsumerState<ServicePage> createState() => _ServicePageState();
 }
 
 class _ServicePageState extends ConsumerState<ServicePage> {
   int totalAmount = 0;
+  List<int> selectedPrices = [];
+
   @override
   Widget build(BuildContext context) {
     final homeState = ref.watch(homeNotifierProvider);
+
+    // Initialize selectedPrices once we have products
+    if (selectedPrices.length != (homeState.products?.data.length ?? 0)) {
+      selectedPrices = List.filled(homeState.products!.data.length, 0);
+    }
+
     return Scaffold(
       backgroundColor: defaultColor,
       body: SingleChildScrollView(
@@ -29,7 +39,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
           children: [
             SizedBox(height: 95.h),
             Padding(
-              padding: EdgeInsets.only(left: 15.w, right: 15.w),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Row(
                 children: [
                   Text(
@@ -37,7 +47,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                     style: GoogleFonts.kumbhSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 24.sp,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Colors.black,
                     ),
                   ),
                   Spacer(),
@@ -59,37 +69,41 @@ class _ServicePageState extends ConsumerState<ServicePage> {
               child: Padding(
                 padding: EdgeInsets.only(left: 15.w),
                 child: ListView.builder(
-                  shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: homeState.services!.data.length,
+                  itemCount: homeState.services?.data.length ?? 0,
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Container(
-                          width: 71.24.w,
-                          height: 71.24.h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromARGB(99, 196, 196, 196),
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.network(
-                                "https://rl4km84x-8000.inc1.devtunnels.ms/${homeState.services!.data[index].iconImage}",
+                    final service = homeState.services!.data[index];
+                    return Padding(
+                      padding: EdgeInsets.only(right: 12.w),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 71.w,
+                            height: 71.h,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromARGB(99, 196, 196, 196),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.network(
+                                  "https://rl4km84x-8000.inc1.devtunnels.ms/${service.iconImage}",
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Text(
-                          "${homeState.services!.data[index].title}",
-                          style: GoogleFonts.kumbhSans(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.sp,
-                            color: Color.fromARGB(255, 0, 0, 0),
+                          Text(
+                            service.title,
+                            style: GoogleFonts.kumbhSans(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.sp,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -97,47 +111,14 @@ class _ServicePageState extends ConsumerState<ServicePage> {
             ),
 
             SizedBox(height: 22.h),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 166.w,
-                    height: 92.h,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 49, 205, 252),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Men",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20.sp,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 166.w,
-                    height: 92.h,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(226, 250, 231, 59),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Women",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20.sp,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _genderButton("Men", Color.fromARGB(255, 49, 205, 252)),
+                _genderButton("Women", Color.fromARGB(226, 250, 231, 59)),
+              ],
             ),
+
             SizedBox(height: 44.h),
             Padding(
               padding: EdgeInsets.only(left: 20.w),
@@ -150,10 +131,10 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                 ),
               ),
             ),
+
             SizedBox(height: 25.h),
             Container(
-              width: 422.w,
-              // height: 308.h,
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -161,67 +142,50 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                     spreadRadius: 0,
                     blurRadius: 4.r,
                     offset: Offset(2, -3),
-                    color: Color.fromARGB(63, 0, 0, 0),
+                    color: Colors.black26,
                   ),
                 ],
               ),
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(
-                      left: 33.w,
-                      top: 18.h,
-                      right: 33.w,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 33.w,
+                      vertical: 18.h,
                     ),
                     child: Row(
                       children: [
-                        Text(
-                          "Topwear",
-                          style: GoogleFonts.kumbhSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20.sp,
-                            color: Color.fromARGB(255, 2, 79, 100),
-                          ),
+                        Expanded(
+                          child: Text("Topwear", style: _headerTextStyle()),
                         ),
-                        Spacer(),
-                        Text(
-                          "Price",
-                          style: GoogleFonts.kumbhSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20.sp,
-                            color: Color.fromARGB(255, 2, 79, 100),
-                          ),
+                        Expanded(
+                          child: Text("Price", style: _headerTextStyle()),
                         ),
-                        Spacer(),
-
-                        Text(
-                          "Subtotal",
-                          style: GoogleFonts.kumbhSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20.sp,
-                            color: Color.fromARGB(255, 2, 79, 100),
-                          ),
+                        Expanded(
+                          child: Text("Subtotal", style: _headerTextStyle()),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 16.h),
+
                   Padding(
-                    padding: EdgeInsets.only(left: 33.w, right: 33.w),
+                    padding: EdgeInsets.symmetric(horizontal: 33.w),
                     child: ListView.builder(
-                      itemCount: homeState.products!.data.length,
+                      itemCount: homeState.products?.data.length ?? 0,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
+                        final product = homeState.products!.data[index];
                         return YourClothses(
-                          name: homeState.products!.data[index].title,
-                          ammount:
-                              homeState.products!.data[index].priceJson[0].price
-                                  .toString() +
-                              " ₹ ",
-                          callBack: (value) {
+                          name: product.title,
+                          amount: product.priceJson[0].price.toInt(),
+                          onChanged: (subtotal) {
                             setState(() {
-                           
+                              selectedPrices[index] = subtotal;
+                              totalAmount = selectedPrices.fold(
+                                0,
+                                (sum, val) => sum + val,
+                              );
                             });
                           },
                         );
@@ -231,29 +195,14 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                 ],
               ),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
+
+            SizedBox(height: 16.h),
+            Padding(
+              padding: EdgeInsets.only(left: 33.w),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: 33.w),
-                  Text(
-                    "Total: ",
-                    style: GoogleFonts.kumbhSans(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20.sp,
-                      color: Color.fromARGB(255, 2, 79, 100),
-                    ),
-                  ),
-                  Text(
-                    "₹ $totalAmount",
-                    style: GoogleFonts.kumbhSans(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20.sp,
-                      color: Color.fromARGB(255, 2, 79, 100),
-                    ),
-                  ),
+                  Text("Total: ", style: _headerTextStyle()),
+                  Text("₹ $totalAmount", style: _headerTextStyle()),
                 ],
               ),
             ),
@@ -292,18 +241,44 @@ class _ServicePageState extends ConsumerState<ServicePage> {
       ),
     );
   }
+
+  Widget _genderButton(String title, Color color) {
+    return Container(
+      width: 166.w,
+      height: 92.h,
+      color: color,
+      child: Center(
+        child: Text(
+          title,
+          style: GoogleFonts.kumbhSans(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.sp,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextStyle _headerTextStyle() {
+    return GoogleFonts.kumbhSans(
+      fontWeight: FontWeight.w400,
+      fontSize: 20.sp,
+      color: Color.fromARGB(255, 2, 79, 100),
+    );
+  }
 }
 
 class YourClothses extends StatefulWidget {
   final String name;
-  final String ammount;
-  final Function callBack;
+  final int amount;
+  final Function(int) onChanged;
 
   const YourClothses({
     super.key,
     required this.name,
-    required this.ammount,
-    required this.callBack,
+    required this.amount,
+    required this.onChanged,
   });
 
   @override
@@ -312,67 +287,45 @@ class YourClothses extends StatefulWidget {
 
 class _YourClothsesState extends State<YourClothses> {
   int count = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Center(
-            child: Text(
-              widget.name,
-              style: GoogleFonts.kumbhSans(
-                fontWeight: FontWeight.w400,
-                fontSize: 15.sp,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-          ),
-        ),
-        Spacer(),
+    int subtotal = widget.amount * count;
 
-        Expanded(
-          child: Center(
-            child: Text(
-              widget.ammount,
-              style: GoogleFonts.kumbhSans(
-                fontWeight: FontWeight.w400,
-                fontSize: 15.sp,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.h),
+      child: Row(
+        children: [
+          Expanded(child: Center(child: Text(widget.name, style: _style()))),
+          Expanded(
+            child: Center(child: Text("${widget.amount} ₹", style: _style())),
           ),
-        ),
-
-        CountStepper(
-          space: 0,
-          iconColor: Color.fromARGB(226, 250, 231, 59),
-          defaultValue: 0,
-          max: 100,
-          min: 0,
-          iconDecrementColor: Color.fromARGB(255, 49, 205, 252),
-          splashRadius: 25,
-          onPressed: (value) {
-            setState(() {
-              count = value;
-            });
-            widget.callBack(double.parse(widget.ammount.split(".")[0]) * count);
-          },
-        ),
-
-        Expanded(
-          child: Center(
-            child: Text(
-              "${double.parse(widget.ammount.split(".")[0]) * count} ₹",
-              style: GoogleFonts.kumbhSans(
-                fontWeight: FontWeight.w400,
-                fontSize: 15.sp,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
+          CountStepper(
+            space: 0,
+            iconColor: Color.fromARGB(226, 250, 231, 59),
+            iconDecrementColor: Color.fromARGB(255, 49, 205, 252),
+            splashRadius: 25,
+            defaultValue: 0,
+            max: 100,
+            min: 0,
+            onPressed: (value) {
+              setState(() {
+                count = value;
+              });
+              widget.onChanged(widget.amount * count);
+            },
           ),
-        ),
-      ],
+          Expanded(child: Center(child: Text("$subtotal ₹", style: _style()))),
+        ],
+      ),
+    );
+  }
+
+  TextStyle _style() {
+    return GoogleFonts.kumbhSans(
+      fontWeight: FontWeight.w400,
+      fontSize: 15.sp,
+      color: Colors.black,
     );
   }
 }
