@@ -6,7 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/googlemap/views/pickup.location.page.dart';
 import 'package:laundry_app/home/controller/home.page.controller.dart';
+import 'package:laundry_app/payment/controller/productCart.controller.dart';
+import 'package:laundry_app/payment/model/createOrder.model.dart';
 import 'package:laundry_app/payment/payment.page.dart';
 import 'package:laundry_app/signUp.page/view/signUp.dart';
 
@@ -192,13 +195,15 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                                   selectedProductsWithQty[existingIndex] = {
                                     'name': product.id.oid,
                                     'qty': qty,
-                                    'subtotal': subtotal,
+                                    'subtotal':
+                                        product.priceJson[0].price.toInt(),
                                   };
                                 } else {
                                   selectedProductsWithQty.add({
                                     'name': product.id.oid,
                                     'qty': qty,
-                                    'subtotal': subtotal,
+                                    'subtotal':
+                                        product.priceJson[0].price.toInt(),
                                   });
                                 }
                               } else if (existingIndex >= 0) {
@@ -238,6 +243,9 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                     "Product: ${product['name']}, Qty: ${product['qty']}, Subtotal: ₹${product['subtotal']}",
                   );
                 }
+                var box = Hive.box("data");
+                var userId = box.get("userId");
+
                 if (selectedProductsWithQty.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -256,8 +264,6 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                   );
                   return;
                 }
-                var box = Hive.box("data");
-                var userId = box.get("userId");
                 if (userId == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -265,15 +271,75 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                       duration: Duration(seconds: 2),
                     ),
                   );
+                  List<Product> products =
+                      selectedProductsWithQty
+                          .map(
+                            (item) => Product(
+                              quantity: item['qty'],
+                              productId: item['name'],
+                              chosedService: ChosedService(
+                                title: "Iron",
+                                price: item['subtotal'].toDouble(),
+                              ),
+                            ),
+                          )
+                          .toList();
+                  // OrderCreateModel(
+                  //   userid: "$userId",
+                  //   trxId: "",
+                  //   paymentTyp: "",
+                  //   totalBookedAmount: totalAmount,
+                  //   product: [...products],
+                  // );
+                  ref
+                      .read(orderCreateProvider.notifier)
+                      .createOrder(
+                        userId: userId,
+                        trxId: "",
+                        paymentTyp: "",
+                        totalBookedAmount: totalAmount,
+                        products: products,
+                      );
                   Navigator.push(
                     context,
                     CupertinoPageRoute(builder: (context) => SignUp()),
                   );
-                  return;
                 } else {
+                  List<Product> products =
+                      selectedProductsWithQty
+                          .map(
+                            (item) => Product(
+                              quantity: item['qty'],
+                              productId: item['name'],
+                              chosedService: ChosedService(
+                                title: "Iron",
+                                price: item['subtotal'].toDouble(),
+                              ),
+                            ),
+                          )
+                          .toList();
+                  // OrderCreateModel(
+                  //   userid: "$userId",
+                  //   trxId: "",
+                  //   paymentTyp: "",
+                  //   totalBookedAmount: totalAmount,
+                  //   product: [...products],
+                  // );
+                  ref
+                      .read(orderCreateProvider.notifier)
+                      .createOrder(
+                        userId: userId,
+                        trxId: "",
+                        paymentTyp: "",
+                        totalBookedAmount: totalAmount,
+                        products: products,
+                      );
+
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => PaymentPage()),
+                    CupertinoPageRoute(
+                      builder: (context) => LocationPickerPage(),
+                    ),
                   );
                 }
               },
@@ -287,7 +353,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                   ),
                   child: Center(
                     child: Text(
-                      "Make Payment",
+                      "Chose pickup Location",
                       style: GoogleFonts.kumbhSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 20.sp,

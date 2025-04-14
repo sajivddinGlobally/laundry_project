@@ -1,21 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/account/account.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/googlemap/views/pickup.location.page.dart';
+import 'package:laundry_app/home/home.page.dart';
+import 'package:laundry_app/payment/controller/productCart.controller.dart';
 import 'package:otpify/otpify.dart';
 
-class OtpPage extends StatefulWidget {
+class OtpPage extends ConsumerStatefulWidget {
   const OtpPage({super.key});
 
   @override
-  State<OtpPage> createState() => _OtpPageState();
+  ConsumerState<OtpPage> createState() => _OtpPageState();
 }
 
-class _OtpPageState extends State<OtpPage> {
+class _OtpPageState extends ConsumerState<OtpPage> {
   @override
   Widget build(BuildContext context) {
+    final orderState = ref.watch(orderCreateProvider);
     return Scaffold(
       backgroundColor: defaultColor,
       appBar: AppBar(
@@ -89,10 +94,19 @@ class _OtpPageState extends State<OtpPage> {
           Center(
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) => AccountPage()),
-                );
+                if (orderState == null) {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => HomePage()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => LocationPickerPage(),
+                    ),
+                  );
+                }
               },
               child: Container(
                 width: 384.51.w,

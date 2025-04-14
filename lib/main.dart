@@ -10,7 +10,9 @@ import 'package:laundry_app/staff/staff.page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  await Hive.openBox("data");
+  if (!Hive.isBoxOpen('data')) {
+    await Hive.openBox('data');
+  }
   // await Hive.openBox("token");
   runApp(ProviderScope(child: const MyApp()));
 }

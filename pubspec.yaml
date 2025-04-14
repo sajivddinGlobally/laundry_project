@@ -52,6 +52,9 @@ dependencies:
   fluttertoast: ^8.2.12
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  geolocator: ^13.0.4
+  geocoding: ^3.0.0
+  google_maps_flutter: ^2.12.1
 
   
 

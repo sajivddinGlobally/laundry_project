@@ -26,7 +26,6 @@ class _SignUpState extends State<SignUp> {
   bool islogin = false;
   @override
   Widget build(BuildContext context) {
-    var box = Hive.box("data");
     return Scaffold(
       backgroundColor: defaultColor,
       body: SingleChildScrollView(
@@ -188,10 +187,13 @@ class _SignUpState extends State<SignUp> {
                   final body = LoginBodyModel(number: phoneController.text);
                   final loginservice = LoginService(await createDio());
                   final response = await loginservice.login(body);
-            
-                  await box.put("userId", response.data.id);
+                  if (!Hive.isBoxOpen('data')) {
+                    await Hive.openBox('data');
+                  }
+                  var box = Hive.box("data");
+                  await box.put("userId", response.data.id.oid);
                   await box.put("name", response.data.name);
-                  await box.put("email", response.data.email)                 ;
+                  await box.put("email", response.data.email);
                   Fluttertoast.showToast(msg: "Login successful");
                   Navigator.push(
                     context,
