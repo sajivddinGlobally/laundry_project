@@ -188,8 +188,10 @@ class _SignUpState extends State<SignUp> {
                   final body = LoginBodyModel(number: phoneController.text);
                   final loginservice = LoginService(await createDio());
                   final response = await loginservice.login(body);
-                  // await box.put("name", response.data.name);
-                  // await box.put("email", response.data.email);
+            
+                  await box.put("userId", response.data.id);
+                  await box.put("name", response.data.name);
+                  await box.put("email", response.data.email)                 ;
                   Fluttertoast.showToast(msg: "Login successful");
                   Navigator.push(
                     context,

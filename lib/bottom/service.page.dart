@@ -1,15 +1,14 @@
 import 'package:count_stepper/count_stepper.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:laundry_app/home/controller/home.page.controller.dart';
 import 'package:laundry_app/payment/payment.page.dart';
-
-// ServicePage.dart
+import 'package:laundry_app/signUp.page/view/signUp.dart';
 
 class ServicePage extends ConsumerStatefulWidget {
   const ServicePage({super.key});
@@ -21,12 +20,12 @@ class ServicePage extends ConsumerStatefulWidget {
 class _ServicePageState extends ConsumerState<ServicePage> {
   int totalAmount = 0;
   List<int> selectedPrices = [];
+  List<Map<String, dynamic>> selectedProductsWithQty = [];
 
   @override
   Widget build(BuildContext context) {
     final homeState = ref.watch(homeNotifierProvider);
 
-    // Initialize selectedPrices once we have products
     if (selectedPrices.length != (homeState.products?.data.length ?? 0)) {
       selectedPrices = List.filled(homeState.products!.data.length, 0);
     }
@@ -179,9 +178,33 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                         return YourClothses(
                           name: product.title,
                           amount: product.priceJson[0].price.toInt(),
-                          onChanged: (subtotal) {
+                          onChanged: (qty, subtotal) {
                             setState(() {
                               selectedPrices[index] = subtotal;
+
+                              final existingIndex = selectedProductsWithQty
+                                  .indexWhere(
+                                    (item) => item['name'] == product.title,
+                                  );
+
+                              if (qty > 0) {
+                                if (existingIndex >= 0) {
+                                  selectedProductsWithQty[existingIndex] = {
+                                    'name': product.id.oid,
+                                    'qty': qty,
+                                    'subtotal': subtotal,
+                                  };
+                                } else {
+                                  selectedProductsWithQty.add({
+                                    'name': product.id.oid,
+                                    'qty': qty,
+                                    'subtotal': subtotal,
+                                  });
+                                }
+                              } else if (existingIndex >= 0) {
+                                selectedProductsWithQty.removeAt(existingIndex);
+                              }
+
                               totalAmount = selectedPrices.fold(
                                 0,
                                 (sum, val) => sum + val,
@@ -210,10 +233,49 @@ class _ServicePageState extends ConsumerState<ServicePage> {
             SizedBox(height: 23.h),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) => PaymentPage()),
-                );
+                for (var product in selectedProductsWithQty) {
+                  debugPrint(
+                    "Product: ${product['name']}, Qty: ${product['qty']}, Subtotal: ₹${product['subtotal']}",
+                  );
+                }
+                if (selectedProductsWithQty.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please select at least one product."),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  return;
+                }
+                if (totalAmount == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please select at least one product."),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  return;
+                }
+                var box = Hive.box("data");
+                var userId = box.get("userId");
+                if (userId == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please login to continue."),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => SignUp()),
+                  );
+                  return;
+                } else {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => PaymentPage()),
+                  );
+                }
               },
               child: Center(
                 child: Container(
@@ -272,7 +334,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
 class YourClothses extends StatefulWidget {
   final String name;
   final int amount;
-  final Function(int) onChanged;
+  final Function(int qty, int subtotal) onChanged;
 
   const YourClothses({
     super.key,
@@ -312,7 +374,7 @@ class _YourClothsesState extends State<YourClothses> {
               setState(() {
                 count = value;
               });
-              widget.onChanged(widget.amount * count);
+              widget.onChanged(count, widget.amount * count);
             },
           ),
           Expanded(child: Center(child: Text("$subtotal ₹", style: _style()))),
