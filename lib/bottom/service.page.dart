@@ -299,6 +299,12 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                         paymentTyp: "",
                         totalBookedAmount: totalAmount,
                         products: products,
+                        pickupSlot: "",
+
+                        deliverySlot: "",
+                        address: "",
+                        latitude: 0.0,
+                        longitude: 0.0,
                       );
                   Navigator.push(
                     context,
@@ -333,6 +339,11 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                         paymentTyp: "",
                         totalBookedAmount: totalAmount,
                         products: products,
+                        pickupSlot: "",
+                        deliverySlot: "",
+                        address: "",
+                        latitude: 0.0,
+                        longitude: 0.0,
                       );
 
                   Navigator.push(

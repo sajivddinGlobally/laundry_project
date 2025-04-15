@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:laundry_app/home/home.page.dart';
 
@@ -13,6 +14,30 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  Set<Polyline> _polylines = {};
+  List<LatLng> polylineCoordinates = [
+    LatLng(28.6139, 77.2090), // Point A (Delhi)
+    LatLng(28.5355, 77.3910), // Point B (Noida)
+  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _addPolyline();
+  }
+  void _addPolyline() {
+  Polyline polyline = Polyline(
+    polylineId: PolylineId("route"),
+    color: Colors.blue,
+    width: 5,
+    points: polylineCoordinates,
+  );
+
+  setState(() {
+    _polylines.add(polyline);
+  });
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

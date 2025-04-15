@@ -18,7 +18,8 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
   LatLng? _currentLatLng;
   String _address = "Loading...";
   MapType _currentMapType = MapType.normal; // Default map type
-
+  double manuelLAt = 0.0;
+  double manuelLong = 0.0;
   @override
   void initState() {
     super.initState();
@@ -60,6 +61,12 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
     });
   }
 
+  Set<Polyline> _polylines = {};
+  List<LatLng> polylineCoordinates = [
+    LatLng(28.6139, 77.2090), // Point A (Delhi)
+    LatLng(28.5355, 77.3910), // Point B (Noida)
+  ];
+
   // Toggle between Normal and Satellite view
   void _toggleMapType() {
     setState(() {
@@ -67,6 +74,39 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
           _currentMapType == MapType.normal
               ? MapType.satellite
               : MapType.normal;
+    });
+  }
+
+  Future<void> getLatLongFromAddress(String address) async {
+    try {
+      List<Location> locations = await locationFromAddress(address);
+
+      if (locations.isNotEmpty) {
+        double latitude = locations.first.latitude;
+        double longitude = locations.first.longitude;
+        setState(() {
+          manuelLAt = latitude;
+          manuelLong = longitude;
+        });
+        print('Latitude: $latitude, Longitude: $longitude');
+      } else {
+        print('No results found');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
+  void _addPolyline() {
+    Polyline polyline = Polyline(
+      polylineId: PolylineId("route"),
+      color: Colors.blue,
+      width: 5,
+      points: polylineCoordinates,
+    );
+
+    setState(() {
+      _polylines.add(polyline);
     });
   }
 
@@ -107,11 +147,37 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
                           _currentLatLng = latLng;
                         });
                         _getAddressFromLatLng(latLng);
+
+                        ref
+                            .read(orderCreateProvider.notifier)
+                            .updateLatitude(latLng.latitude);
+                        ref
+                            .read(orderCreateProvider.notifier)
+                            .updateLongitude(latLng.longitude);
                       },
                       myLocationEnabled: true,
                       myLocationButtonEnabled: true,
                     ),
                   ),
+                  // Expanded(
+                  //   child: GoogleMap(
+                  //     onMapCreated: (controller) => _mapController = controller,
+                  //     initialCameraPosition: CameraPosition(
+                  //       target: _currentLatLng!,
+                  //       zoom: 16,
+                  //     ),
+                  //     mapType: _currentMapType, // Set the map type
+
+                  //     onTap: (latLng) {
+                  //       setState(() {
+                  //         _currentLatLng = latLng;
+                  //       });
+                  //       _getAddressFromLatLng(latLng);
+                  //     },
+                  //     myLocationEnabled: true,
+                  //     myLocationButtonEnabled: true,
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -141,8 +207,8 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               ref
-                                  .read(addressStateNotifer.notifier)
-                                  .update("$_address");
+                                  .read(orderCreateProvider.notifier)
+                                  .updateAddress("$_address");
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
@@ -227,11 +293,22 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
                     print("Pincode: $pincode");
 
                     // yahan tu API call ya save logic likh sakta hai
-
-                    Navigator.pop(context);
+                    getLatLongFromAddress(
+                      "$flatNo, $street, $city, $state, $pincode",
+                    );
                     ref
-                        .read(addressStateNotifer.notifier)
-                        .update("$flatNo, $street, $city, $state, $pincode");
+                        .read(orderCreateProvider.notifier)
+                        .updateAddress(
+                          "$flatNo, $street, $city, $state, $pincode",
+                        );
+                    ref
+                        .read(orderCreateProvider.notifier)
+                        .updateLatitude(manuelLAt);
+                    ref
+                        .read(orderCreateProvider.notifier)
+                        .updateLongitude(manuelLong);
+                    Navigator.pop(context);
+
                     Navigator.push(
                       context,
                       CupertinoPageRoute(builder: (context) => PaymentPage()),

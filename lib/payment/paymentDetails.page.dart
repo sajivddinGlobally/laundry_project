@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/home/home.page.dart';
 import 'package:laundry_app/payment/controller/productCart.controller.dart';
 import 'package:laundry_app/payment/controller/slot.controller.dart';
 import 'package:laundry_app/payment/model/slot.model.dart';
@@ -198,7 +200,14 @@ class _PaymentdetailsPageState extends ConsumerState<PaymentdetailsPage> {
               // ),
               SizedBox(height: 70.h),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Fluttertoast.showToast(msg: "Order Placed Successfully");
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => HomePage()),
+                    (route) => false,
+                  );
+                },
                 child: Center(
                   child: Container(
                     width: 334.w,
@@ -232,17 +241,17 @@ class _PaymentdetailsPageState extends ConsumerState<PaymentdetailsPage> {
   }
 }
 
-class PickupSlotDropdown extends StatefulWidget {
+class PickupSlotDropdown extends ConsumerStatefulWidget {
   final List<Datum> allSlots;
 
   const PickupSlotDropdown({Key? key, required this.allSlots})
     : super(key: key);
 
   @override
-  State<PickupSlotDropdown> createState() => _PickupSlotDropdownState();
+  ConsumerState<PickupSlotDropdown> createState() => _PickupSlotDropdownState();
 }
 
-class _PickupSlotDropdownState extends State<PickupSlotDropdown> {
+class _PickupSlotDropdownState extends ConsumerState<PickupSlotDropdown> {
   Datum? selectedSlot;
 
   @override
@@ -258,6 +267,9 @@ class _PickupSlotDropdownState extends State<PickupSlotDropdown> {
         setState(() {
           selectedSlot = newValue;
         });
+        ref
+            .read(orderCreateProvider.notifier)
+            .updatePickupSlot(newValue!.startTime);
       },
       isExpanded: true,
       items:
@@ -271,16 +283,16 @@ class _PickupSlotDropdownState extends State<PickupSlotDropdown> {
   }
 }
 
-class DropSlotDeopDown extends StatefulWidget {
+class DropSlotDeopDown extends ConsumerStatefulWidget {
   final List<Datum> allSlots;
 
   const DropSlotDeopDown({Key? key, required this.allSlots}) : super(key: key);
 
   @override
-  State<DropSlotDeopDown> createState() => _DropSlotDeopDownState();
+  ConsumerState<DropSlotDeopDown> createState() => _DropSlotDeopDownState();
 }
 
-class _DropSlotDeopDownState extends State<DropSlotDeopDown> {
+class _DropSlotDeopDownState extends ConsumerState<DropSlotDeopDown> {
   Datum? selectedSlot;
 
   @override
@@ -290,12 +302,15 @@ class _DropSlotDeopDownState extends State<DropSlotDeopDown> {
         widget.allSlots.where((slot) => slot.pickup == false).toList();
 
     return DropdownButton<Datum>(
-      hint: Text("Select Pickup Slot"),
+      hint: Text("Select Drop Slot"),
       value: selectedSlot,
       onChanged: (Datum? newValue) {
         setState(() {
           selectedSlot = newValue;
         });
+        ref
+            .read(orderCreateProvider.notifier)
+            .updateDeliverySlot(newValue!.startTime);
       },
       isExpanded: true,
       items:
