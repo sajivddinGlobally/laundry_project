@@ -1,200 +1,126 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:laundry_app/staff/controller/admin.orders.controller.dart';
+import 'package:laundry_app/staff/perticulerOrder.page.dart';
+import 'package:laundry_app/staff/userlocationMap.page.dart';
 
-class StaffPage extends StatefulWidget {
+class StaffPage extends ConsumerStatefulWidget {
   const StaffPage({super.key});
 
   @override
-  State<StaffPage> createState() => _StaffPageState();
+  ConsumerState<StaffPage> createState() => _StaffPageState();
 }
 
-class _StaffPageState extends State<StaffPage> {
+class _StaffPageState extends ConsumerState<StaffPage> {
   int tab = 0;
   @override
   Widget build(BuildContext context) {
+    final orders = ref.watch(adminOrderProvider);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 251, 251, 251),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 55, 162, 210),
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 21.h),
-          Row(
-            children: [
-              SizedBox(width: 25.w),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Color.fromARGB(191, 0, 0, 0),
-                ),
-              ),
-              SizedBox(width: 80.w),
-              Text(
-                "Order history",
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20.sp,
-                  color: Color.fromARGB(255, 44, 62, 80),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 15.h),
-          Padding(
-            padding: EdgeInsets.only(left: 25.w, right: 25.w),
-            child: Container(
-              width: 382.w,
-              height: 160.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 2),
-                    blurRadius: 40.r,
-                    spreadRadius: 0,
-                    color: Color.fromARGB(25, 0, 0, 0),
+      body: orders.when(
+        data: (snapshot) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 21.h),
+
+                SizedBox(height: 15.h),
+
+                SizedBox(height: 16.w),
+                Padding(
+                  padding: EdgeInsets.only(left: 25.w),
+                  child: Text(
+                    "Delivery History",
+                    style: GoogleFonts.kumbhSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20.sp,
+                      color: Color.fromARGB(255, 44, 62, 80),
+                    ),
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "6 Quantity of clothes",
-                          style: GoogleFonts.kumbhSans(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20.sp,
-                            color: Color.fromARGB(255, 44, 62, 80),
-                          ),
-                        ),
-                        Spacer(),
-                        Container(
-                          width: 83.w,
-                          // height: 20.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.r),
-                            color: Color.fromARGB(51, 83, 192, 113),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Ongoing",
-                              style: GoogleFonts.openSans(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14.sp,
-                                color: Color.fromARGB(255, 3, 150, 44),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      "Order ID; #1020",
-                      style: GoogleFonts.kumbhSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
-                        color: Color.fromARGB(255, 44, 62, 80),
-                      ),
-                    ),
-                    Text(
-                      "3rd June,24 ",
-                      style: GoogleFonts.kumbhSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.sp,
-                        color: Color.fromARGB(255, 126, 124, 124),
-                      ),
-                    ),
-                    Text(
-                      "12:00pm",
-                      style: GoogleFonts.kumbhSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.sp,
-                        color: Color.fromARGB(255, 126, 124, 124),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    CustomPaint(
-                      size: Size(350.w, 2.w), // Width and height of the line
-                      painter: DottedLinePainter(),
-                    ),
-                    SizedBox(height: 8.h),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              tab = 1;
-                            });
-                          },
-                          child: History(
-                            text: "Ironing",
-                            color:
-                                tab == 1
-                                    ? Color.fromARGB(255, 12, 3, 140)
-                                    : Color.fromARGB(255, 255, 255, 255),
-                          ),
-                        ),
-                        SizedBox(width: 100.w),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              tab = 2;
-                            });
-                          },
-                          child: History(
-                            text: 'Delivery',
-                            color:
-                                tab == 2
-                                    ? Color.fromARGB(255, 12, 3, 140)
-                                    : Color.fromARGB(255, 255, 255, 255),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
                 ),
+                SizedBox(height: 20.h),
+                // DeliveryComplete(),
+                // SizedBox(height: 20.h),
+                // DeliveryComplete(),
+                ListView.builder(
+                  itemCount: snapshot.data.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 16.w),
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => AdminOrderDetailsScreen(orderId: snapshot.data[index].id.oid,)));
+                        },
+                        child: DeliveryComplete(
+                          email: snapshot.data[index].user.email,
+                          phoneNumber: snapshot.data[index].user.phone,
+                          picked: snapshot.data[index].iroing,
+                          delivered: snapshot.data[index].deliverd,
+                          pickupTime: snapshot.data[index].pickupSlot,
+                          pickupDate: snapshot.data[index].createDate,
+                          name: snapshot.data[index].user.name,
+                          orderId: snapshot.data[index].orderId,
+                          address: snapshot.data[index].address,
+                          lat: snapshot.data[index].latitude,
+                          long: snapshot.data[index].longitude,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+        error: (err, stack) => Center(child: Text(err.toString())),
+        loading:
+            () => Center(
+              child: CircularProgressIndicator(
+                color: Color.fromARGB(255, 55, 162, 210),
               ),
             ),
-          ),
-          SizedBox(height: 16.w),
-          Padding(
-            padding: EdgeInsets.only(left: 25.w),
-            child: Text(
-              "View status",
-              style: GoogleFonts.kumbhSans(
-                fontWeight: FontWeight.w600,
-                fontSize: 16.sp,
-                color: Color.fromARGB(255, 44, 62, 80),
-                decoration: TextDecoration.underline,
-                decorationColor: Color.fromARGB(255, 44, 62, 80),
-                decorationThickness: 2,
-              ),
-            ),
-          ),
-          SizedBox(height: 20.h),
-          DeliveryComplete(),
-          SizedBox(height: 20.h),
-          DeliveryComplete(),
-        ],
       ),
     );
   }
 }
 
 class DeliveryComplete extends StatefulWidget {
-  const DeliveryComplete({super.key});
+  final String name;
+  final String orderId;
+  final String pickupDate;
+  final String pickupTime;
+  final bool picked;
+  final bool delivered;
+  final String address;
+  final double lat;
+  final double long;
+  final String email;
+  final String phoneNumber;
+  const DeliveryComplete({
+    super.key,
+    required this.name,
+    required this.pickupTime,
+    required this.orderId,
+    required this.pickupDate,
+    required this.picked,
+    required this.delivered,
+    required this.address,
+    required this.lat,
+    required this.long,
+    required this.email,
+    required this.phoneNumber,
+  });
 
   @override
   State<DeliveryComplete> createState() => _DeliveryCompleteState();
@@ -210,7 +136,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
           padding: EdgeInsets.only(left: 25.w, right: 25.w),
           child: Container(
             width: 382.w,
-            height: 160.h,
+
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -230,7 +156,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                   Row(
                     children: [
                       Text(
-                        "6 Quantity of clothes",
+                        "${widget.name}",
                         style: GoogleFonts.kumbhSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 20.sp,
@@ -238,28 +164,28 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                         ),
                       ),
                       Spacer(),
-                      Container(
-                        width: 83.w,
-                        // height: 20.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.r),
-                          color: Color.fromARGB(255, 55, 162, 210),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Complete",
-                            style: GoogleFonts.openSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   width: 83.w,
+                      //   // height: 20.h,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(16.r),
+                      //     color: Color.fromARGB(255, 55, 162, 210),
+                      //   ),
+                      //   child: Center(
+                      //     child: Text(
+                      //       "Complete",
+                      //       style: GoogleFonts.openSans(
+                      //         fontWeight: FontWeight.w400,
+                      //         fontSize: 14.sp,
+                      //         color: Colors.white,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   Text(
-                    "Order ID; #1020",
+                    "Order ID: #${widget.orderId}",
                     style: GoogleFonts.kumbhSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.sp,
@@ -267,7 +193,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                     ),
                   ),
                   Text(
-                    "3rd June,24 ",
+                    "${widget.pickupDate}",
                     style: GoogleFonts.kumbhSans(
                       fontWeight: FontWeight.w400,
                       fontSize: 14.sp,
@@ -275,7 +201,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                     ),
                   ),
                   Text(
-                    "12:00pm",
+                    "${widget.pickupTime}",
                     style: GoogleFonts.kumbhSans(
                       fontWeight: FontWeight.w400,
                       fontSize: 14.sp,
@@ -295,7 +221,10 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                         height: 15.h,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color.fromARGB(255, 12, 3, 140),
+                          color:
+                              widget.picked
+                                  ? Color.fromARGB(255, 12, 3, 140)
+                                  : Colors.white,
                           border: Border.all(
                             color: Color.fromARGB(255, 12, 3, 140),
                           ),
@@ -303,7 +232,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                       ),
                       SizedBox(width: 10.w),
                       Text(
-                        "Ironly",
+                        "Picked",
                         style: GoogleFonts.kumbhSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 12.sp,
@@ -318,7 +247,11 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                             height: 15.h,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color.fromARGB(255, 12, 3, 140),
+                              // color: Color.fromARGB(255, 12, 3, 140),
+                              color:
+                                  widget.delivered
+                                      ? Color.fromARGB(255, 12, 3, 140)
+                                      : Colors.white,
                               border: Border.all(
                                 color: Color.fromARGB(255, 12, 3, 140),
                               ),
@@ -326,7 +259,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                           ),
                           SizedBox(width: 10.w),
                           Text(
-                            "Delivery",
+                            "Deliverd",
                             style: GoogleFonts.kumbhSans(
                               fontWeight: FontWeight.w500,
                               fontSize: 12.sp,
@@ -337,6 +270,7 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 10.h),
                 ],
               ),
             ),
@@ -345,15 +279,33 @@ class _DeliveryCompleteState extends State<DeliveryComplete> {
         SizedBox(height: 16.w),
         Padding(
           padding: EdgeInsets.only(left: 25.w),
-          child: Text(
-            "View status",
-            style: GoogleFonts.kumbhSans(
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
-              color: Color.fromARGB(255, 44, 62, 80),
-              decoration: TextDecoration.underline,
-              decorationColor: Color.fromARGB(255, 44, 62, 80),
-              decorationThickness: 2,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder:
+                      (context) => UserLocationPage(
+                        latitude: widget.lat,
+                        longitude: widget.long,
+                        address: widget.address,
+                        name: widget.name,
+                        email: widget.email,
+                        phone: widget.phoneNumber,
+                      ),
+                ),
+              );
+            },
+            child: Text(
+              "View Location",
+              style: GoogleFonts.kumbhSans(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+                color: Color.fromARGB(255, 44, 62, 80),
+                decoration: TextDecoration.underline,
+                decorationColor: Color.fromARGB(255, 44, 62, 80),
+                decorationThickness: 2,
+              ),
             ),
           ),
         ),

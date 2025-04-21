@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'loginService.dart';
+part of 'createOrder.service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'loginService.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _LoginService implements LoginService {
-  _LoginService(this._dio, {this.baseUrl, this.errorLogger}) {
+class _OrderService implements OrderService {
+  _OrderService(this._dio, {this.baseUrl, this.errorLogger}) {
     baseUrl ??= 'https://rl4km84x-8000.inc1.devtunnels.ms';
   }
 
@@ -20,54 +20,28 @@ class _LoginService implements LoginService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<LoginResModel> login(LoginBodyModel body) async {
+  Future<OrderCreateResponse> createOrder(
+    OrderCreateModel orderCreateModel,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
-    final _options = _setStreamType<LoginResModel>(
+    _data.addAll(orderCreateModel.toJson());
+    final _options = _setStreamType<OrderCreateResponse>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/login',
+            '/api/create-order',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late LoginResModel _value;
+    late OrderCreateResponse _value;
     try {
-      _value = LoginResModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<UserRegisterResModel> registerUser(UserRegisterModel body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
-    final _options = _setStreamType<UserRegisterResModel>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/signup',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late UserRegisterResModel _value;
-    try {
-      _value = UserRegisterResModel.fromJson(_result.data!);
+      _value = OrderCreateResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

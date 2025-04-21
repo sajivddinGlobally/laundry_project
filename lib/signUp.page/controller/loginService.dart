@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:laundry_app/signUp.page/Model/loginBodyModel.dart';
 import 'package:laundry_app/signUp.page/Model/loginResModel.dart';
+import 'package:laundry_app/signUp.page/Model/userRegister.model.dart';
+import 'package:laundry_app/signUp.page/Model/userRegisterRes.model.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'loginService.g.dart';
@@ -11,4 +13,7 @@ abstract class LoginService {
 
   @POST('/api/login')
   Future<LoginResModel> login(@Body() LoginBodyModel body);
+  @POST('/api/signup')
+  Future<UserRegisterResModel> registerUser(@Body() UserRegisterModel body);
+
 }

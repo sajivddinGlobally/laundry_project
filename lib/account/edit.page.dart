@@ -3,10 +3,16 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:laundry_app/account/map.page.dart';
+import 'package:laundry_app/config/pretty.dio.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/signUp.page/Model/userRegister.model.dart';
+import 'package:laundry_app/signUp.page/Model/userRegisterRes.model.dart';
+import 'package:laundry_app/signUp.page/controller/loginService.dart';
+import 'package:laundry_app/signUp.page/view/signUp.dart';
 
 class EditPage extends StatefulWidget {
   const EditPage({super.key});
@@ -17,16 +23,14 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   final TextEditingController _firstNameController = TextEditingController(
-    text: "Linda Silth",
+    text: "",
   );
-  final TextEditingController _emailControlelr = TextEditingController(
-    text: " silth@gmail.com",
-  );
+
   final TextEditingController _phoneController = TextEditingController(
-    text: "+91 9642854965",
+    text: "",
   );
   final TextEditingController _addressController = TextEditingController(
-    text: "Gunnersbury House 1 Chapel Hill,london",
+    text: "",
   );
   final TextEditingController newPasswordController = TextEditingController(
     text: "***********",
@@ -34,7 +38,11 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController reTypeNewPassword = TextEditingController(
     text: "***********",
   );
+  final _nameOfSocietyController = TextEditingController(text: "");
+  final _flatNumberController = TextEditingController(text: "");
+  final _towerNumberController = TextEditingController(text: "");
 
+  bool loder = false;
   File? image;
   final picker = ImagePicker();
 
@@ -149,7 +157,7 @@ class _EditPageState extends State<EditPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Personal details",
+                      "Register",
                       style: GoogleFonts.kumbhSans(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w600,
@@ -168,81 +176,58 @@ class _EditPageState extends State<EditPage> {
                   ],
                 ),
                 Spacer(),
-                Stack(
-                  children: [
-                    Container(
-                      width: 58.85.w,
-                      height: 58.85.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color.fromARGB(255, 217, 217, 217),
-                        border: Border.all(
-                          color: Color.fromARGB(255, 53, 185, 212),
-                          width: 2.w,
-                        ),
-                      ),
-                      child: Center(
-                        child:
-                            image == null
-                                ? Image.asset("assets/girl.png")
-                                : ClipOval(
-                                  child: Image.file(
-                                    image!,
-                                    width: 58.85.w,
-                                    height: 58.85.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 1.w,
-                      bottom: 1.h,
-                      child: GestureDetector(
-                        onTap: () {
-                          showOptions();
-                        },
-                        child: Container(
-                          width: 25.w,
-                          height: 25.h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromARGB(255, 53, 185, 212),
-                          ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 18.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
                 SizedBox(width: 41.w),
               ],
             ),
             SizedBox(height: 50.h),
             _buildTextField("First Name", _firstNameController),
             SizedBox(height: 30.h),
-            _buildTextField("E-mail", _emailControlelr),
-            SizedBox(height: 30.h),
             _buildTextField("Phone number", _phoneController),
             SizedBox(height: 30.h),
-            _buildTextField("Current Address", _addressController),
+            _buildTextField("Name of Society", _nameOfSocietyController),
             SizedBox(height: 30.h),
-            _buildTextField("New password", newPasswordController),
+            _buildTextField("Flat Number", _flatNumberController),
             SizedBox(height: 30.h),
-            _buildTextField("Re-type New Password", reTypeNewPassword),
-            SizedBox(height: 50.h),
+            _buildTextField("Tower Number", _towerNumberController),
+            SizedBox(height: 30.h),
+            _buildTextField("Address", _addressController),
+            SizedBox(height: 30.h),
+
             Padding(
               padding: EdgeInsets.only(left: 23.w, right: 23.w),
               child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(builder: (context) => MapPage()),
-                  );
+                onTap: () async {
+                  if (loder == false) {
+                    setState(() {
+                      loder = true;
+                    });
+                    final service = LoginService(createDio());
+                    try {
+                      UserRegisterResModel res = await service.registerUser(
+                        UserRegisterModel(
+                          name: _firstNameController.text,
+
+                          phoneNumber: _phoneController.text,
+                          currentAddress:
+                              "${_nameOfSocietyController.text}, ${_flatNumberController.text}, ${_towerNumberController.text}, ${_addressController.text}",
+                          countryCode: "+91",
+                          profilePicUrl: "",
+                        ),
+                      );
+                      Fluttertoast.showToast(msg: res.message.toString());
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute(builder: (context) => SignUp()),
+                        (route) => false,
+                      );
+                    } catch (e) {
+                      Fluttertoast.showToast(msg: e.toString());
+                      setState(() {
+                        loder = false;
+                      });
+                    }
+                  }
                 },
                 child: Container(
                   width: 384.w,
@@ -253,7 +238,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                   child: Center(
                     child: Text(
-                      "Save",
+                      "Register",
                       style: GoogleFonts.kumbhSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 20.sp,

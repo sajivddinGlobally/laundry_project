@@ -11,18 +11,21 @@ String loginResModelToJson(LoginResModel data) => json.encode(data.toJson());
 class LoginResModel {
     String message;
     Data data;
-
+    int otp;
     LoginResModel({
+      required this.otp,
         required this.message,
         required this.data,
     });
 
     factory LoginResModel.fromJson(Map<String, dynamic> json) => LoginResModel(
+      otp: json["otp"],
         message: json["message"],
         data: Data.fromJson(json["data"]),
     );
 
     Map<String, dynamic> toJson() => {
+        "otp": otp,
         "message": message,
         "data": data.toJson(),
     };
@@ -31,47 +34,43 @@ class LoginResModel {
 class Data {
     Id id;
     String name;
-    String email;
+
     String phoneNumber;
     String countryCode;
     String currentAddress;
-    double latitude;
-    double longitude;
+    bool staff;
     String profilePicUrl;
 
     Data({
         required this.id,
         required this.name,
-        required this.email,
+
         required this.phoneNumber,
         required this.countryCode,
         required this.currentAddress,
-        required this.latitude,
-        required this.longitude,
+required this.staff,
         required this.profilePicUrl,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: Id.fromJson(json["_id"]),
         name: json["name"],
-        email: json["email"],
+
+        staff: json["staff"],
         phoneNumber: json["phone_number"],
         countryCode: json["country_code"],
         currentAddress: json["current_address"],
-        latitude: json["latitude"]?.toDouble(),
-        longitude: json["longitude"]?.toDouble(),
+
         profilePicUrl: json["profile_pic_url"],
     );
 
     Map<String, dynamic> toJson() => {
         "_id": id.toJson(),
         "name": name,
-        "email": email,
         "phone_number": phoneNumber,
         "country_code": countryCode,
         "current_address": currentAddress,
-        "latitude": latitude,
-        "longitude": longitude,
+        "staff": staff,
         "profile_pic_url": profilePicUrl,
     };
 }

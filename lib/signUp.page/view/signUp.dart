@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:laundry_app/account/account.page.dart';
+import 'package:laundry_app/account/edit.page.dart';
 import 'package:laundry_app/config/pretty.dio.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:laundry_app/signUp.page/Model/loginBodyModel.dart';
@@ -72,69 +74,7 @@ class _SignUpState extends State<SignUp> {
               ],
             ),
             SizedBox(height: 50.h),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(width: 50.w),
-                Radio(
-                  activeColor: Color.fromARGB(255, 0, 97, 254),
-                  value: "Customer",
-                  groupValue: selectedOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedOption = value!;
-                    });
-                  },
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedOption = "Customer";
-                    });
-                  },
-                  child: Text(
-                    "Customer",
-                    style: GoogleFonts.kumbhSans(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                  ),
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    Radio(
-                      activeColor: Color.fromARGB(255, 0, 97, 254),
-                      value: "Staff",
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value!;
-                        });
-                      },
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedOption = "Staff";
-                        });
-                      },
-                      child: Text(
-                        "Staff",
-                        style: GoogleFonts.kumbhSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16.sp,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 70.w),
-                  ],
-                ),
-              ],
-            ),
+
             SizedBox(height: 30.h),
             Padding(
               padding: EdgeInsets.only(left: 50.w, right: 50.w),
@@ -193,18 +133,30 @@ class _SignUpState extends State<SignUp> {
                   var box = Hive.box("data");
                   await box.put("userId", response.data.id.oid);
                   await box.put("name", response.data.name);
-                  await box.put("email", response.data.email);
-                  Fluttertoast.showToast(msg: "Login successful");
+                
+                  await box.put("phoneNumber", response.data.phoneNumber);
+                  await box.put("countryCode", response.data.countryCode);
+                  await box.put("currentAddress", response.data.currentAddress);
+                  await box.put("staff", response.data.staff);
+                  Fluttertoast.showToast(msg: "Otp Sent to your phone number");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OtpPage()),
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              OtpPage(otpCode: response.otp.toString()),
+                    ),
                   );
                 } catch (e) {
                   setState(() {
                     islogin = false;
                   });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditPage()),
+                  );
                   log(e.toString());
-                  Fluttertoast.showToast(msg: "login failed");
+                  Fluttertoast.showToast(msg: "Account not found");
                 }
               },
               child: Container(

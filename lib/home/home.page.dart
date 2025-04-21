@@ -2,8 +2,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:laundry_app/bottom/location.page.dart';
+import 'package:laundry_app/bottom/lorem/lorempage.dart';
 import 'package:laundry_app/bottom/profile.page.dart';
 import 'package:laundry_app/bottom/service.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
@@ -11,6 +14,7 @@ import 'package:laundry_app/home/controller/home.page.controller.dart';
 import 'package:laundry_app/home/controller/homebannerController.dart';
 import 'package:laundry_app/home/getAllServiceControleller/getAllController.dart';
 import 'package:laundry_app/home/productController/productController.dart';
+import 'package:laundry_app/home/support.page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -30,6 +34,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
+    //
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(homeNotifierProvider.notifier).fetchAllData();
     });
@@ -40,6 +46,40 @@ class _HomePageState extends ConsumerState<HomePage> {
         _currentPage = page.round();
       });
     });
+  }
+
+  Future<void> _getCurrentAddress() async {
+    try {
+      // 1. Check permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      // 2. Get current location
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // 3. Reverse geocode
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      Placemark place = placemarks.first;
+
+      setState(() {
+        currentAddress =
+            "${place.name}, ${place.street}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea}, ${place.country}, ${place.postalCode}";
+        loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        currentAddress = "Failed to get address: $e";
+        loading = false;
+      });
+    }
   }
 
   List<Map<String, String>> mylist = [
@@ -67,6 +107,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     {"imageUrl": "assets/jacket.png", "name": "Jacket", "ammount": " ₹ 28.74"},
   ];
   int bottomTab = 0;
+  String currentAddress = "Fetching current address";
+  bool loading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +128,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      height: 215.h,
+
                       color: Color.fromARGB(255, 0, 116, 168),
                       child: Column(
                         children: [
@@ -104,17 +146,27 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ),
                                 ),
                                 Spacer(),
-                                Container(
-                                  width: 39.w,
-                                  height: 39.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.r),
-                                    color: Color.fromARGB(191, 6, 79, 112),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.notifications_rounded,
-                                      color: Colors.white,
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SupportScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 39.w,
+                                    height: 39.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      color: Color.fromARGB(191, 6, 79, 112),
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.contact_support_outlined,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -129,7 +181,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               Padding(
                                 padding: EdgeInsets.only(left: 20.w),
                                 child: Text(
-                                  "Gunnersbury House 1 Chapel Hill,london",
+                                  "$currentAddress",
                                   style: GoogleFonts.kumbhSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 15.sp,
@@ -139,80 +191,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 23.w,
-                                    right: 20.w,
-                                    top: 10.h,
-                                  ),
-                                  child: SizedBox(
-                                    height: 49.h,
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(
-                                          bottom: 8.h,
-                                        ),
-                                        hintText: "search",
-                                        hintStyle: GoogleFonts.kumbhSans(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20.sp,
-                                          color: Color.fromARGB(
-                                            255,
-                                            2,
-                                            79,
-                                            100,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        prefixIcon: Icon(
-                                          Icons.search,
-                                          color: Color.fromARGB(
-                                            255,
-                                            3,
-                                            145,
-                                            196,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20.r,
-                                          ),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            20.r,
-                                          ),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 44.w,
-                                height: 44.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15.r),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.menu,
-                                    color: Color.fromARGB(191, 6, 22, 28),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20.w),
-                            ],
-                          ),
+                          SizedBox(height: 10.h),
                         ],
                       ),
                     ),
@@ -455,10 +434,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                               child: Row(
                                 children: [
-                                  Image.network(
-                                    // cardList[index]["imageUrl"].toString(),
-                                    "https://rl4km84x-8000.inc1.devtunnels.ms" +
-                                        homeState.products!.data[index].image,
+                                  Container(
+                                    width: 80.w,
+                                    height: 80.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                          // cardList[index]["imageUrl"].toString(),
+                                          "https://rl4km84x-8000.inc1.devtunnels.ms${homeState.products!.data[index].image}",
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(width: 23.w),
                                   Column(
@@ -476,111 +465,111 @@ class _HomePageState extends ConsumerState<HomePage> {
                                           color: Color.fromARGB(255, 0, 0, 0),
                                         ),
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            // "iron Only",
-                                            selectedTitle != null
-                                                ? "$selectedTitle"
-                                                : "Select service",
-                                            style: GoogleFonts.notoSansKr(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.32.sp,
-                                              color: Color.fromARGB(
-                                                255,
-                                                155,
-                                                150,
-                                                150,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 25.w,
-                                            height: 35.h,
-                                            child: PopupMenuButton<String>(
-                                              icon: Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom: 10.h,
-                                                ),
-                                                child: Icon(
-                                                  Icons.arrow_drop_down,
-                                                ),
-                                              ),
-                                              onSelected: (value) {
-                                                setState(() {
-                                                  selectedTitle = value;
-                                                  // Find the corresponding price
-                                                  selectedPrice =
-                                                      homeState
-                                                          .products!
-                                                          .data[index]
-                                                          .priceJson
-                                                          .firstWhere(
-                                                            (item) =>
-                                                                item.title ==
-                                                                value,
-                                                          )
-                                                          .price;
-                                                });
-                                              },
-                                              itemBuilder: (context) {
-                                                return homeState
-                                                    .products!
-                                                    .data[index]
-                                                    .priceJson
-                                                    .map<PopupMenuItem<String>>(
-                                                      (item) {
-                                                        return PopupMenuItem<
-                                                          String
-                                                        >(
-                                                          height: 30.h,
-                                                          value: item.title,
-                                                          child: Text(
-                                                            item.title,
-                                                          ),
-                                                        );
-                                                      },
-                                                    )
-                                                    .toList();
-                                              },
-                                              // itemBuilder:
-                                              //     (context) => [
-                                              //       PopupMenuItem(
-                                              //         height: 30.h,
-                                              //         value:
-                                              //             data
-                                              //                 .data[index]
-                                              //                 .priceJson[index]
-                                              //                 .title,
-                                              //         child: Text(
-                                              //           data
-                                              //               .data[index]
-                                              //               .priceJson[index]
-                                              //               .title,
-                                              //         ),
-                                              //       ),
-                                              //       PopupMenuItem(
-                                              //         onTap: () {},
-                                              //         height: 30.h,
-                                              //         value:
-                                              //             data
-                                              //                 .data[index]
-                                              //                 .priceJson
-                                              //                 .last
-                                              //                 .title,
-                                              //         child: Text(
-                                              //           data
-                                              //               .data[index]
-                                              //               .priceJson
-                                              //               .last
-                                              //               .title,
-                                              //         ),
-                                              //       ),
-                                              //     ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Text(
+                                      //       // "iron Only",
+                                      //       selectedTitle != null
+                                      //           ? "$selectedTitle"
+                                      //           : "Select service",
+                                      //       style: GoogleFonts.notoSansKr(
+                                      //         fontWeight: FontWeight.bold,
+                                      //         fontSize: 12.32.sp,
+                                      //         color: Color.fromARGB(
+                                      //           255,
+                                      //           155,
+                                      //           150,
+                                      //           150,
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //     // Container(
+                                      //     //   width: 25.w,
+                                      //     //   height: 35.h,
+                                      //     //   child: PopupMenuButton<String>(
+                                      //     //     icon: Padding(
+                                      //     //       padding: EdgeInsets.only(
+                                      //     //         bottom: 10.h,
+                                      //     //       ),
+                                      //     //       child: Icon(
+                                      //     //         Icons.arrow_drop_down,
+                                      //     //       ),
+                                      //     //     ),
+                                      //     //     onSelected: (value) {
+                                      //     //       setState(() {
+                                      //     //         selectedTitle = value;
+                                      //     //         // Find the corresponding price
+                                      //     //         selectedPrice =
+                                      //     //             homeState
+                                      //     //                 .products!
+                                      //     //                 .data[index]
+                                      //     //                 .priceJson
+                                      //     //                 .firstWhere(
+                                      //     //                   (item) =>
+                                      //     //                       item.title ==
+                                      //     //                       value,
+                                      //     //                 )
+                                      //     //                 .price;
+                                      //     //       });
+                                      //     //     },
+                                      //     //     itemBuilder: (context) {
+                                      //     //       return homeState
+                                      //     //           .products!
+                                      //     //           .data[index]
+                                      //     //           .priceJson
+                                      //     //           .map<PopupMenuItem<String>>(
+                                      //     //             (item) {
+                                      //     //               return PopupMenuItem<
+                                      //     //                 String
+                                      //     //               >(
+                                      //     //                 height: 30.h,
+                                      //     //                 value: item.title,
+                                      //     //                 child: Text(
+                                      //     //                   item.title,
+                                      //     //                 ),
+                                      //     //               );
+                                      //     //             },
+                                      //     //           )
+                                      //     //           .toList();
+                                      //     //     },
+                                      //     //     // itemBuilder:
+                                      //     //     //     (context) => [
+                                      //     //     //       PopupMenuItem(
+                                      //     //     //         height: 30.h,
+                                      //     //     //         value:
+                                      //     //     //             data
+                                      //     //     //                 .data[index]
+                                      //     //     //                 .priceJson[index]
+                                      //     //     //                 .title,
+                                      //     //     //         child: Text(
+                                      //     //     //           data
+                                      //     //     //               .data[index]
+                                      //     //     //               .priceJson[index]
+                                      //     //     //               .title,
+                                      //     //     //         ),
+                                      //     //     //       ),
+                                      //     //     //       PopupMenuItem(
+                                      //     //     //         onTap: () {},
+                                      //     //     //         height: 30.h,
+                                      //     //     //         value:
+                                      //     //     //             data
+                                      //     //     //                 .data[index]
+                                      //     //     //                 .priceJson
+                                      //     //     //                 .last
+                                      //     //     //                 .title,
+                                      //     //     //         child: Text(
+                                      //     //     //           data
+                                      //     //     //               .data[index]
+                                      //     //     //               .priceJson
+                                      //     //     //               .last
+                                      //     //     //               .title,
+                                      //     //     //         ),
+                                      //     //     //       ),
+                                      //     //     //     ],
+                                      //     //   ),
+                                      //     // ),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                   Spacer(),
@@ -588,19 +577,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        // " ₹ 18.00",
-                                        // cardList[index]["ammount"]
-                                        //     .toString(),
-                                        selectedPrice != null
-                                            ? "₹ ${selectedPrice!.toStringAsFixed(2)}"
-                                            : "₹ 0.00", // default before selection
+                                        " ₹ ${homeState.products!.data[index].priceJson[0].price.toStringAsFixed(2)}",
+
+                                        // default before selection
                                         style: GoogleFonts.notoSansKr(
                                           fontWeight: FontWeight.w500,
                                           color: Color.fromARGB(255, 0, 0, 0),
                                         ),
                                       ),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          setState(() {
+                                            bottomTab = 2;
+                                          });
+                                        },
                                         child: Container(
                                           margin: EdgeInsets.only(top: 5.h),
                                           width: 25.w,
@@ -632,11 +622,37 @@ class _HomePageState extends ConsumerState<HomePage> {
                       },
                     ),
                     SizedBox(height: 20.h),
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          bottomTab = 2;
+                        });
+                      },
+                      child: Container(
+                        width: 334.w,
+                        height: 68.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.r),
+                          color: buttonColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Book now",
+                            style: GoogleFonts.kumbhSans(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               )
               : bottomTab == 1
-              ? LocationPage()
+              ? LoremPage()
               : bottomTab == 2
               ? ServicePage()
               : ProfilePage(),
@@ -658,7 +674,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             label: "",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_outlined, size: 30.sp),
+            icon: Icon(Icons.shopping_cart, size: 30.sp),
             label: "",
           ),
           BottomNavigationBarItem(
@@ -674,4 +690,3 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 }
-  

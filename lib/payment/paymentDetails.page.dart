@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:laundry_app/config/pretty.dio.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
+import 'package:laundry_app/googlemap/views/pickup.location.page.dart';
 import 'package:laundry_app/home/home.page.dart';
 import 'package:laundry_app/payment/controller/productCart.controller.dart';
 import 'package:laundry_app/payment/controller/slot.controller.dart';
 import 'package:laundry_app/payment/model/slot.model.dart';
 import 'package:laundry_app/payment/payment.page.dart';
+import 'package:laundry_app/payment/service/createOrder.service.dart';
 
 class PaymentdetailsPage extends ConsumerStatefulWidget {
   const PaymentdetailsPage({super.key});
@@ -19,6 +22,7 @@ class PaymentdetailsPage extends ConsumerStatefulWidget {
 }
 
 class _PaymentdetailsPageState extends ConsumerState<PaymentdetailsPage> {
+  bool loder = false;
   String selectedOptions = "service provider";
   @override
   Widget build(BuildContext context) {
@@ -200,16 +204,50 @@ class _PaymentdetailsPageState extends ConsumerState<PaymentdetailsPage> {
               // ),
               SizedBox(height: 70.h),
               GestureDetector(
-                onTap: () {
-                  Fluttertoast.showToast(msg: "Order Placed Successfully");
-                  Navigator.pushAndRemoveUntil(
+                onTap: () async {
+                  // if (loder == false) {
+                  //   setState(() {
+                  //     loder = true;
+                  //   });
+                  //   try {
+                  //     final service = OrderService(createDio());
+                  //     OrderCreateResponse response = await service.createOrder(
+                  //       order!,
+                  //     );
+                  //     if (response.message == "Order added") {
+                  //       Fluttertoast.showToast(
+                  //         msg: "Order Placed Successfully",
+                  //       );
+                  //       Navigator.pushAndRemoveUntil(
+                  //         context,
+                  //         CupertinoPageRoute(builder: (context) => HomePage()),
+                  //         (route) => false,
+                  //       );
+                  //     } else {
+                  //       Fluttertoast.showToast(msg: response.message);
+                  //     }
+                  //   } catch (e) {
+                  //     Fluttertoast.showToast(
+                  //       msg: "Some thing went wrong",
+                  //       toastLength: Toast.LENGTH_LONG,
+                  //       backgroundColor: Colors.red,
+                  //     );
+                  //     setState(() {
+                  //       loder = false;
+                  //     });
+                  //   }
+                  // }
+                  Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => HomePage()),
-                    (route) => false,
+                    CupertinoPageRoute(
+                      builder: (context) => LocationPickerPage(
+                        
+                      ),
+                    ),
                   );
                 },
                 child: Center(
-                  child: Container(
+                  child: loder == false? Container(
                     width: 334.w,
                     height: 68.h,
                     decoration: BoxDecoration(
@@ -218,7 +256,7 @@ class _PaymentdetailsPageState extends ConsumerState<PaymentdetailsPage> {
                     ),
                     child: Center(
                       child: Text(
-                        "Place Order",
+                        "Book your order",
                         style: GoogleFonts.kumbhSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 20.sp,
@@ -226,7 +264,7 @@ class _PaymentdetailsPageState extends ConsumerState<PaymentdetailsPage> {
                         ),
                       ),
                     ),
-                  ),
+                  ) : CircularProgressIndicator()
                 ),
               ),
             ],
@@ -269,7 +307,7 @@ class _PickupSlotDropdownState extends ConsumerState<PickupSlotDropdown> {
         });
         ref
             .read(orderCreateProvider.notifier)
-            .updatePickupSlot(newValue!.startTime);
+            .updatePickupSlot("${newValue!.startTime}-${newValue.endtime}");
       },
       isExpanded: true,
       items:
@@ -310,7 +348,7 @@ class _DropSlotDeopDownState extends ConsumerState<DropSlotDeopDown> {
         });
         ref
             .read(orderCreateProvider.notifier)
-            .updateDeliverySlot(newValue!.startTime);
+            .updateDeliverySlot("${newValue!.startTime}-${newValue.endtime}");
       },
       isExpanded: true,
       items:

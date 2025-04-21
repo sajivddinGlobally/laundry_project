@@ -1,17 +1,23 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:laundry_app/account/account.page.dart';
 import 'package:laundry_app/constant/colors/myColors.dart';
 import 'package:laundry_app/googlemap/views/pickup.location.page.dart';
 import 'package:laundry_app/home/home.page.dart';
 import 'package:laundry_app/payment/controller/productCart.controller.dart';
+import 'package:laundry_app/signUp.page/view/signUp.dart';
 import 'package:otpify/otpify.dart';
 
 class OtpPage extends ConsumerStatefulWidget {
-  const OtpPage({super.key});
+  final String otpCode;
+  const OtpPage({super.key, required this.otpCode});
 
   @override
   ConsumerState<OtpPage> createState() => _OtpPageState();
@@ -70,7 +76,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                 fields: 4,
                 resendSecond: 10,
                 width: 60.w,
-                height: 60.h,
+                height: 60.w,
                 borderRadius: BorderRadius.circular(50.r),
                 fieldColor: buttonColor,
                 borderColor: Colors.white,
@@ -82,49 +88,39 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                   fontWeight: FontWeight.w600,
                 ),
                 resendFontSize: 17.sp,
-                resendText: 'Resent it',
+                resendText: '',
                 resendAlignment: ResendAlignment.end,
                 resendFontWeight: FontWeight.normal,
                 onChanged: (value) {},
-                onCompleted: (value) {},
+                onCompleted: (value) {
+                  if (value == widget.otpCode) {
+                    if (orderState == null) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute(builder: (context) => HomePage()),
+                        (route) => false,
+                      );
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => LocationPickerPage(),
+                        ),
+                        (route) => false,
+                      );
+                    }
+                  } else {
+                    var box = Hive.box("data");
+                    box.clear();
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => SignUp()),
+                    );
+                    log("Invalid OTP code");
+                    Fluttertoast.showToast(msg: "Invalid OTP code");
+                  }
+                },
                 onResend: () {},
-              ),
-            ),
-          ),
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                if (orderState == null) {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(builder: (context) => HomePage()),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => LocationPickerPage(),
-                    ),
-                  );
-                }
-              },
-              child: Container(
-                width: 384.51.w,
-                height: 64.28.h,
-                decoration: BoxDecoration(
-                  color: buttonColor,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Center(
-                  child: Text(
-                    "continue",
-                    style: GoogleFonts.kumbhSans(
-                      fontSize: 24.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
               ),
             ),
           ),

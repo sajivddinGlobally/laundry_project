@@ -11,6 +11,7 @@ import 'package:laundry_app/home/controller/home.page.controller.dart';
 import 'package:laundry_app/payment/controller/productCart.controller.dart';
 import 'package:laundry_app/payment/model/createOrder.model.dart';
 import 'package:laundry_app/payment/payment.page.dart';
+import 'package:laundry_app/payment/paymentDetails.page.dart';
 import 'package:laundry_app/signUp.page/view/signUp.dart';
 
 class ServicePage extends ConsumerStatefulWidget {
@@ -112,15 +113,6 @@ class _ServicePageState extends ConsumerState<ServicePage> {
               ),
             ),
 
-            SizedBox(height: 22.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _genderButton("Men", Color.fromARGB(255, 49, 205, 252)),
-                _genderButton("Women", Color.fromARGB(226, 250, 231, 59)),
-              ],
-            ),
-
             SizedBox(height: 44.h),
             Padding(
               padding: EdgeInsets.only(left: 20.w),
@@ -187,7 +179,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
 
                               final existingIndex = selectedProductsWithQty
                                   .indexWhere(
-                                    (item) => item['name'] == product.title,
+                                    (item) => item['name'] == product.id.oid,
                                   );
 
                               if (qty > 0) {
@@ -279,7 +271,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                               productId: item['name'],
                               chosedService: ChosedService(
                                 title: "Iron",
-                                price: item['subtotal'].toDouble(),
+                                price: item['subtotal'],
                               ),
                             ),
                           )
@@ -319,7 +311,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                               productId: item['name'],
                               chosedService: ChosedService(
                                 title: "Iron",
-                                price: item['subtotal'].toDouble(),
+                                price: item['subtotal'],
                               ),
                             ),
                           )
@@ -349,7 +341,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => LocationPickerPage(),
+                      builder: (context) => PaymentdetailsPage(),
                     ),
                   );
                 }
@@ -364,7 +356,7 @@ class _ServicePageState extends ConsumerState<ServicePage> {
                   ),
                   child: Center(
                     child: Text(
-                      "Chose pickup Location",
+                      "Chose your slot",
                       style: GoogleFonts.kumbhSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 20.sp,

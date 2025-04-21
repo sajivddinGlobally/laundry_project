@@ -55,7 +55,10 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
     );
 
     Placemark place = placemarks[0];
+    
     setState(() {
+      manuelLAt = latLng.latitude;
+      manuelLong = latLng.longitude;
       _address =
           "${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
     });
@@ -148,12 +151,7 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
                         });
                         _getAddressFromLatLng(latLng);
 
-                        ref
-                            .read(orderCreateProvider.notifier)
-                            .updateLatitude(latLng.latitude);
-                        ref
-                            .read(orderCreateProvider.notifier)
-                            .updateLongitude(latLng.longitude);
+                        
                       },
                       myLocationEnabled: true,
                       myLocationButtonEnabled: true,
@@ -180,55 +178,73 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
                   // ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              showSimpleAddressSheet(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: buttonColor,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
+                        Padding(padding: EdgeInsets.only(bottom: 10),
+                        child: Center(
+                          child: Text(_address,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
-                            child: Text("Manual"),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ref
-                                  .read(orderCreateProvider.notifier)
-                                  .updateAddress("$_address");
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => PaymentPage(),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  showSimpleAddressSheet(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: buttonColor,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical: 12,
+                                  ),
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: buttonColor,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
+                                child: Text("Manual"),
                               ),
                             ),
-                            child: Text("Confirm"),
-                          ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  ref.read(orderCreateProvider.notifier).updateLatitude(manuelLAt);
+                                  ref.read(orderCreateProvider.notifier).updateLongitude(manuelLong);
+                                  ref
+                                      .read(orderCreateProvider.notifier)
+                                      .updateAddress("$_address");
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => PaymentPage(),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: buttonColor,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                child: Text("Confirm"),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
